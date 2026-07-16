@@ -2,6 +2,7 @@
 import MainLayout from '../layouts/MainLayout.astro';
 import Navbar from '../components/layout/Navbar.astro';
 import Footer from '../components/layout/Footer.astro';
+import { FileDown, X } from '@lucide/astro';
 
 // Section components
 import HeroSection from '../components/sections/HeroSection.astro';
@@ -39,6 +40,70 @@ import ContactSection from '../components/sections/ContactSection.astro';
     <DownloadCV />
 
     <ContactSection />
+  </div>
+
+  <!-- Interactive CV Choice Selection Popup Modal Overlay (Rendered at root layout level for perfect fixed position viewport centering) -->
+  <div
+    id="cv-popup-modal"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 hidden"
+    role="dialog"
+    aria-modal="true"
+  >
+    <!-- Dark blurred backdrop -->
+    <div id="cv-modal-backdrop" class="absolute inset-0 bg-bg/90 backdrop-blur-md opacity-0"></div>
+
+    <!-- Choice dialog box -->
+    <div
+      id="cv-modal-box"
+      class="relative w-full max-w-[480px] bg-card-bg border border-divider rounded-lg shadow-2xl p-6 md:p-8 z-10 transform scale-90 opacity-0 flex flex-col gap-6"
+    >
+      <!-- Close Button icon -->
+      <button
+        id="cv-modal-close"
+        class="absolute top-4 right-4 p-2 text-text-secondary hover:text-text-primary rounded-full hover:bg-surface transition-colors cursor-pointer"
+        aria-label="Close CV Selector"
+      >
+        <X class="w-4.5 h-4.5" />
+      </button>
+
+      <!-- Heading -->
+      <div class="text-center">
+        <span class="text-caption text-accent uppercase font-bold tracking-widest font-mono block mb-1">
+          Select Version
+        </span>
+        <h3 class="text-heading-md font-bold text-text-primary mb-2">
+          Choose CV Focus
+        </h3>
+        <p class="text-body-sm text-text-secondary leading-relaxed">
+          Please select the CV version that aligns with the role or opportunity you are offering:
+        </p>
+      </div>
+
+      <!-- Action Buttons selection list -->
+      <div class="flex flex-col gap-3">
+        <!-- Business Analyst option -->
+        <a
+          href="/docs/CV-Haris A Majid_BA-20260716.pdf"
+          download
+          class="w-full flex items-center justify-center gap-2.5 text-body-sm bg-accent text-white px-5 py-3.5 rounded-md hover:bg-blue-700 transition-colors font-semibold text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent cursor-pointer"
+          id="cv-download-ba-btn"
+        >
+          <FileDown class="w-4 h-4" />
+          <span>Business Analyst Focus</span>
+        </a>
+
+        <!-- R&D Process option -->
+        <a
+          href="/docs/CV-Haris A Majid_RnD-20260716.pdf"
+          download
+          class="w-full flex items-center justify-center gap-2.5 text-body-sm bg-surface border border-divider text-text-primary px-5 py-3.5 rounded-md hover:bg-divider transition-colors font-semibold text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-divider cursor-pointer"
+          id="cv-download-rd-btn"
+        >
+          <FileDown class="w-4 h-4" />
+          <span>R&D Process Focus</span>
+        </a>
+      </div>
+    </div>
   </div>
 
   <Footer slot="footer" />

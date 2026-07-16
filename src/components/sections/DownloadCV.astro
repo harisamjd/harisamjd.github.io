@@ -1,5 +1,5 @@
 ---
-import { FileDown, Mail } from '@lucide/astro';
+import { FileDown, Mail, X } from '@lucide/astro';
 import { getImage } from 'astro:assets';
 // Import FAZZA-3388.jpg for a premium blurred photographic background
 import cvBgImage from '../../assets/picts/FAZZA-3388.jpg';
@@ -29,20 +29,18 @@ const optimizedCvBg = await getImage({ src: cvBgImage, format: 'webp', width: 19
     </p>
 
     <!-- CTAs Box -->
-    <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-      <!-- Main CV Download Button -->
-      <a
-        href="/cv-haris-abdul-majid.pdf"
-        download
-        class="w-full sm:w-auto flex items-center justify-center gap-2 text-body-sm bg-accent text-white px-8 py-3.5 rounded-md hover:bg-blue-700 transition-colors font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-        id="cv-download-btn"
+    <div class="flex flex-col gap-6 items-center">
+      <!-- Main Trigger Button to Open Popup -->
+      <button
+        id="cv-modal-trigger"
+        class="w-full sm:w-auto flex items-center justify-center gap-2 text-body-sm bg-accent text-white px-8 py-3.5 rounded-md hover:bg-blue-700 transition-colors font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent cursor-pointer"
       >
         <FileDown class="w-4 h-4" />
         <span>Download CV</span>
-      </a>
+      </button>
 
       <!-- Secondary Social Links -->
-      <div class="flex gap-3 w-full sm:w-auto justify-center">
+      <div class="flex gap-3 justify-center">
         <a
           href="https://www.linkedin.com/in/harisam"
           target="_blank"
@@ -74,8 +72,7 @@ const optimizedCvBg = await getImage({ src: cvBgImage, format: 'webp', width: 19
         </a>
       </div>
     </div>
-  </div>
-</section>
+  </div></section>
 
 <script>
   import gsap from 'gsap';
@@ -84,6 +81,7 @@ const optimizedCvBg = await getImage({ src: cvBgImage, format: 'webp', width: 19
   gsap.registerPlugin(ScrollTrigger);
 
   window.addEventListener('DOMContentLoaded', () => {
+    // 1. Entrance reveal
     const section = document.getElementById('download-cv');
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -103,10 +101,80 @@ const optimizedCvBg = await getImage({ src: cvBgImage, format: 'webp', width: 19
       });
     }
 
-    // Microcopy feedback trigger on download
-    const downloadBtn = document.getElementById('cv-download-btn');
-    downloadBtn?.addEventListener('click', () => {
-      console.log('Download started... Your download will begin shortly.');
+    // 2. Interactive CV Popup Modal logic
+    const triggerBtn = document.getElementById('cv-modal-trigger');
+    const modalEl = document.getElementById('cv-popup-modal');
+    const backdropEl = document.getElementById('cv-modal-backdrop');
+    const boxEl = document.getElementById('cv-modal-box');
+    const closeBtn = document.getElementById('cv-modal-close');
+
+    const baBtn = document.getElementById('cv-download-ba-btn');
+    const rdBtn = document.getElementById('cv-download-rd-btn');
+
+    const navTriggerBtn = document.getElementById('nav-cv-trigger');
+    const mobileNavTriggerBtn = document.getElementById('mobile-nav-cv-trigger');
+
+    if (!triggerBtn || !modalEl || !backdropEl || !boxEl || !closeBtn) return;
+
+    let isModalOpen = false;
+
+    const openModal = () => {
+      isModalOpen = true;
+      modalEl.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+
+      // GSAP animate open
+      gsap.to(backdropEl, { opacity: 1, duration: 0.3 });
+      gsap.to(boxEl, { opacity: 1, scale: 1, duration: 0.4, ease: 'power2.out' });
+    };
+
+    const closeModal = () => {
+      // GSAP animate close
+      gsap.to(boxEl, {
+        opacity: 0,
+        scale: 0.95,
+        duration: 0.2,
+        onComplete: () => {
+          modalEl.classList.add('hidden');
+          document.body.classList.remove('overflow-hidden');
+          isModalOpen = false;
+        }
+      });
+      gsap.to(backdropEl, { opacity: 0, duration: 0.2 });
+    };
+
+    // Click triggers
+    triggerBtn.addEventListener('click', openModal);
+    navTriggerBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal();
+    });
+    mobileNavTriggerBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal();
+    });
+    closeBtn.addEventListener('click', closeModal);
+    backdropEl.addEventListener('click', closeModal);
+
+    // Escape key closes modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isModalOpen) {
+        closeModalHandle();
+      }
+    });
+
+    const closeModalHandle = () => {
+      closeModal();
+    };
+
+    // Logging listeners
+    baBtn?.addEventListener('click', () => {
+      console.log('BA CV Download started... Your download will begin shortly.');
+      closeModal();
+    });
+    rdBtn?.addEventListener('click', () => {
+      console.log('R&D CV Download started... Your download will begin shortly.');
+      closeModal();
     });
   });
 </script>

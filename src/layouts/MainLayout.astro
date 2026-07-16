@@ -77,6 +77,65 @@ const {
 
     <slot name="footer" />
 
+    <!-- Long Laboratory Liquid Column (Thematic R&D scroll progress cylinder, aligned perfectly with the card) -->
+    <div
+      id="scroll-liquid-column"
+      class="fixed right-[30px] top-24 bottom-24 w-3.5 rounded-full border border-divider/60 bg-bg/40 z-30 overflow-hidden shadow-inner backdrop-blur-sm pointer-events-none hidden md:block opacity-0 transition-opacity duration-500"
+    >
+      <!-- Liquid Level Fill (Fills top-to-bottom as progress increases) -->
+      <div
+        id="scroll-liquid-fill"
+        class="absolute top-0 left-0 right-0 w-full bg-gradient-to-b from-accent to-blue-400 rounded-b-full transition-all duration-100 ease-out"
+        style="height: 0%;"
+      ></div>
+      <!-- Tiny fluid bubble markers inside the column for aesthetic -->
+      <div class="absolute inset-0 flex flex-col justify-around items-center opacity-30">
+        <span class="w-0.5 h-0.5 bg-white rounded-full"></span>
+        <span class="w-1.5 h-[1px] bg-white"></span>
+        <span class="w-0.5 h-0.5 bg-white rounded-full"></span>
+        <span class="w-1.5 h-[1px] bg-white"></span>
+        <span class="w-0.5 h-0.5 bg-white rounded-full"></span>
+        <span class="w-1.5 h-[1px] bg-white"></span>
+        <span class="w-0.5 h-0.5 bg-white rounded-full"></span>
+      </div>
+    </div>
+
+    <!-- Floating Circular Scroll Progress Indicator (Moves dynamically along the column) -->
+    <div
+      id="scroll-progress-container"
+      class="fixed right-[13px] z-40 hidden md:flex flex-col items-center select-none pointer-events-none opacity-0 transition-opacity duration-500 cursor-pointer"
+      role="button"
+      aria-label="Scroll to top"
+    >
+      <div class="relative w-12 h-12 flex items-center justify-center bg-bg/85 backdrop-blur-md rounded-full border border-divider shadow-lg hover:border-accent/40 transition-colors">
+        <!-- SVG Progress Circle -->
+        <svg class="absolute inset-0 w-full h-full -rotate-90">
+          <circle
+            cx="24"
+            cy="24"
+            r="20"
+            class="stroke-divider/30 fill-none"
+            stroke-width="2"
+          />
+          <circle
+            id="scroll-progress-circle"
+            cx="24"
+            cy="24"
+            r="20"
+            class="stroke-accent fill-none"
+            stroke-width="2"
+            stroke-dasharray="125.66"
+            stroke-dashoffset="125.66"
+            stroke-linecap="round"
+            style="transition: stroke-dashoffset 0.1s ease-out;"
+          />
+        </svg>
+        <span id="scroll-progress-text" class="text-[10px] font-mono font-semibold text-text-primary">
+          0%
+        </span>
+      </div>
+    </div>
+
     <!-- Intro and Smooth Scroll Scripting -->
     <script>
       import Lenis from 'lenis';
@@ -148,6 +207,76 @@ const {
         requestAnimationFrame(raf);
         (window as any).lenis = lenis;
       }
+
+      // Scroll Progress Calculation and scroll-to-top handler
+      window.addEventListener('DOMContentLoaded', () => {
+        const progressCircle = document.getElementById('scroll-progress-circle');
+        const progressText = document.getElementById('scroll-progress-text');
+        const progressContainer = document.getElementById('scroll-progress-container');
+        const liquidFill = document.getElementById('scroll-liquid-fill');
+        
+        if (!progressCircle || !progressText || !progressContainer) return;
+
+        const circumference = 125.66; // 2 * Math.PI * 20
+
+        const updateScrollProgress = () => {
+          const scrollTop = window.scrollY;
+          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+
+          // Update text percentage
+          progressText.textContent = Math.round(scrollPercent) + '%';
+
+          // Update stroke dashoffset
+          const offset = circumference - (scrollPercent / 100) * circumference;
+          progressCircle.setAttribute('stroke-dashoffset', offset.toString());
+
+          // Update liquid tube fill height (flowing top-to-bottom)
+          if (liquidFill) {
+            liquidFill.style.height = scrollPercent + '%';
+          }
+
+          // Calculate dynamic vertical position for the card (floating at the bottom tip of the liquid)
+          const topOffset = 96; // matches top-24 (96px)
+          const bottomOffset = 96; // matches bottom-24 (96px)
+          const cardHeight = 48; // matches w-12 h-12 (48px)
+          const availableHeight = window.innerHeight - topOffset - bottomOffset - cardHeight;
+          const cardTop = topOffset + (scrollPercent / 100) * availableHeight;
+
+          progressContainer.style.top = cardTop + 'px';
+
+          // Show indicator only after scrolling down slightly (e.g. 100px)
+          const liquidColumn = document.getElementById('scroll-liquid-column');
+          if (scrollTop > 100) {
+            progressContainer.classList.remove('opacity-0', 'pointer-events-none');
+            progressContainer.classList.add('opacity-100');
+            
+            if (liquidColumn) {
+              liquidColumn.classList.remove('opacity-0', 'pointer-events-none');
+              liquidColumn.classList.add('opacity-100');
+            }
+          } else {
+            progressContainer.classList.remove('opacity-100');
+            progressContainer.classList.add('opacity-0', 'pointer-events-none');
+            
+            if (liquidColumn) {
+              liquidColumn.classList.remove('opacity-100');
+              liquidColumn.classList.add('opacity-0', 'pointer-events-none');
+            }
+          }
+        };
+
+        window.addEventListener('scroll', updateScrollProgress);
+        updateScrollProgress(); // Initial run
+
+        // Click to scroll to top
+        progressContainer.addEventListener('click', () => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        });
+      });
     </script>
   </body>
 </html>

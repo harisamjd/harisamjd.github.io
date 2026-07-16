@@ -33,12 +33,13 @@ const navItems = [
       ))}
       <a
         href="#download-cv"
-        class="text-body-sm bg-accent text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors font-medium"
+        class="text-body-sm bg-accent text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors font-medium cursor-pointer"
+        id="nav-cv-trigger"
       >
         Download CV
       </a>
     </nav>
-
+ 
     <!-- Mobile Menu Button -->
     <button
       id="mobile-menu-toggle"
@@ -51,7 +52,7 @@ const navItems = [
       <X class="w-6 h-6 hide-menu-icon hidden" />
     </button>
   </div>
-
+ 
   <!-- Mobile Drawer Menu -->
   <div
     id="mobile-menu"
@@ -70,13 +71,14 @@ const navItems = [
     ))}
     <a
       href="#download-cv"
-      class="text-body bg-accent text-white px-4 py-3 rounded-md hover:bg-blue-700 transition-colors font-medium text-center mt-4"
+      class="text-body bg-accent text-white px-4 py-3 rounded-md hover:bg-blue-700 transition-colors font-medium text-center mt-4 cursor-pointer"
+      id="mobile-nav-cv-trigger"
     >
       Download CV
     </a>
   </div>
 </header>
-
+ 
 <script>
   const header = document.getElementById('main-header');
   const toggleBtn = document.getElementById('mobile-menu-toggle');
@@ -84,7 +86,8 @@ const navItems = [
   const showIcon = toggleBtn?.querySelector('.show-menu-icon');
   const hideIcon = toggleBtn?.querySelector('.hide-menu-icon');
   const mobileLinks = document.querySelectorAll('.mobile-nav-link');
-
+  const mobileNavCvTrigger = document.getElementById('mobile-nav-cv-trigger');
+ 
   // 1. Scroll State Behavior
   function updateScrollState() {
     if (!header) return;
@@ -96,10 +99,10 @@ const navItems = [
       header.classList.add('bg-transparent', 'border-transparent');
     }
   }
-
+ 
   window.addEventListener('scroll', updateScrollState);
   updateScrollState(); // Initialize state
-
+ 
   // 2. Mobile Menu Toggle
   function toggleMobileMenu() {
     const isExpanded = toggleBtn?.getAttribute('aria-expanded') === 'true';
@@ -109,9 +112,9 @@ const navItems = [
     hideIcon?.classList.toggle('hidden');
     document.body.classList.toggle('overflow-hidden');
   }
-
+ 
   toggleBtn?.addEventListener('click', toggleMobileMenu);
-
+ 
   // Close mobile menu when clicking a link
   mobileLinks.forEach((link) => {
     link.addEventListener('click', () => {
@@ -119,6 +122,13 @@ const navItems = [
         toggleMobileMenu();
       }
     });
+  });
+
+  // Close mobile drawer when clicking CV trigger
+  mobileNavCvTrigger?.addEventListener('click', () => {
+    if (!mobileMenu?.classList.contains('translate-x-full')) {
+      toggleMobileMenu();
+    }
   });
 
   // 3. Scroll Spy (Highlight active section)
