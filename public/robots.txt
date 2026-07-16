@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://harisamajid.com/sitemap-index.xml

@@ -1,0 +1,600 @@
+---
+import { certificates } from '../../content/data/certificates';
+import { ArrowUpRight, X, BookOpen, Layers, ChevronLeft, ChevronRight } from '@lucide/astro';
+import { Image } from 'astro:assets';
+
+// Import logos for static optimization
+import logoGoogleCoursera from '../../assets/logos/Google-Coursera-featured.webp';
+import logoDqlab from '../../assets/logos/dqlab.webp';
+import logoAgs from '../../assets/logos/AGS.png';
+import logoBsi from '../../assets/logos/bsi.jpg';
+import logoPqm from '../../assets/logos/pqm.jpeg';
+import logoPresenta from '../../assets/logos/presenta.png';
+import logoVibecoding from '../../assets/logos/vibecodingid.png';
+
+const logoMap: Record<string, any> = {
+  "google-coursera": logoGoogleCoursera,
+  "dqlab": logoDqlab,
+  "ags": logoAgs,
+  "bsi": logoBsi,
+  "pqm": logoPqm,
+  "presenta": logoPresenta,
+  "vibecoding": logoVibecoding
+};
+
+// Pass certificates data with subCertificates to client-side JS
+const certificatesJSON = JSON.stringify(certificates);
+---
+
+<section
+  id="certificates"
+  class="py-[120px] bg-bg px-6 transition-opacity opacity-0 transform translate-y-[40px] relative overflow-hidden"
+  aria-labelledby="certificates-heading"
+>
+  <div class="max-w-[1100px] mx-auto">
+    <!-- Header -->
+    <div class="mb-16">
+      <span class="text-caption text-text-muted tracking-widest uppercase font-semibold block mb-2">
+        Credibility
+      </span>
+      <h2 id="certificates-heading" class="text-heading-xl text-text-primary font-bold tracking-tight mb-4">
+        Continuous Learning
+      </h2>
+      <p class="text-body text-text-secondary max-w-[640px]">
+        Structured certifications and training modules that support my professional experience and validate my expertise in business and analytics. Click to view credentials.
+      </p>
+    </div>
+
+    <!-- Gallery Container -->
+    <div class="relative group/gallery">
+      <!-- Horizontal Scroll Track -->
+      <div
+        id="certs-track"
+        class="flex overflow-x-auto gap-6 py-6 px-[10px] md:px-[15%] scrollbar-none snap-x snap-mandatory scroll-smooth cursor-pointer"
+      >
+        {certificates.map((cert, index) => (
+          <div
+            class="cert-card flex-shrink-0 w-[295px] md:w-[340px] snap-center bg-card-bg border border-divider p-6 rounded-md hover:-translate-y-1 hover:border-accent/30 hover:shadow-md transition-all duration-500 origin-center scale-95 opacity-55 flex flex-col justify-between group cursor-pointer"
+            data-index={index}
+          >
+            <!-- Card Header: Logo & Type Badge -->
+            <div class="flex justify-between items-start mb-4">
+              <div class="w-20 h-10 bg-white rounded border border-divider p-1.5 flex items-center justify-center overflow-hidden shrink-0">
+                <Image
+                  src={logoMap[cert.logoKey]}
+                  alt={`${cert.issuer} Logo`}
+                  class="max-w-full max-h-full object-contain"
+                  width={80}
+                  height={40}
+                  quality={85}
+                />
+              </div>
+              <span class={`text-[9px] font-bold font-mono tracking-wider uppercase px-2 py-0.5 rounded border ${
+                cert.type === 'Certification' 
+                  ? 'bg-accent/10 border-accent/20 text-accent' 
+                  : 'bg-secondary-accent/10 border-secondary-accent/20 text-secondary-accent'
+              }`}>
+                {cert.type}
+              </span>
+            </div>
+
+            <!-- Title & Provider / Date Info -->
+            <div class="mb-4">
+              <h3 class="text-body-sm font-semibold text-text-primary group-hover:text-accent transition-colors duration-300 leading-snug mb-1">
+                {cert.title}
+              </h3>
+              <span class="text-caption text-text-secondary font-medium block">
+                {cert.issuer} &bull; Issued {cert.issueDate}
+              </span>
+            </div>
+
+            <!-- Inline PDF Certificate Miniature Preview Screen -->
+            <div class="w-full h-[180px] bg-bg border border-divider rounded-md overflow-hidden relative shadow-inner mb-4 flex items-center justify-center">
+              <iframe
+                src={`${cert.url}#toolbar=0&navpanes=0&scrollbar=0`}
+                class="w-full h-full border-none pointer-events-none scale-100 origin-top"
+                title={`${cert.title} Card Preview`}
+                loading="lazy"
+              ></iframe>
+              <!-- Hover Overlay to indicate clickability -->
+              <div class="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none flex items-center justify-center">
+                <span class="bg-bg/90 border border-divider text-[10px] font-mono font-semibold tracking-wider text-accent px-3 py-1.5 rounded-full shadow flex items-center gap-1.5">
+                  EXPAND VIEW
+                  <ArrowUpRight class="w-3 h-3" />
+                </span>
+              </div>
+            </div>
+
+            <!-- Bottom Row: Sub-certificate indicators or simple action link -->
+            <div class="flex items-center justify-between pt-3 border-t border-divider/60">
+              <span class="text-caption text-text-muted">
+                {cert.subCertificates ? (
+                  <span class="inline-flex items-center gap-0.5 text-[10px] bg-accent/10 text-accent px-1.5 py-0.5 rounded font-mono font-semibold">
+                    <Layers class="w-2.5 h-2.5" />
+                    {cert.subCertificates.length} courses
+                  </span>
+                ) : (
+                  <span>Verified Document</span>
+                )}
+              </span>
+              <span class="text-caption text-accent font-semibold group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
+                <span>View</span>
+                <ArrowUpRight class="w-3.5 h-3.5" />
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Left / Right Desktop navigation buttons -->
+      <button
+        id="certs-prev"
+        class="absolute -left-4 top-1/2 -translate-y-1/2 p-3 bg-card-bg/90 border border-divider text-text-primary rounded-full hover:bg-surface transition-all duration-300 opacity-0 group-hover/gallery:opacity-100 hidden md:flex items-center justify-center shadow-lg z-20 cursor-pointer"
+        aria-label="Previous Slide"
+      >
+        <ChevronLeft class="w-5 h-5" />
+      </button>
+      <button
+        id="certs-next"
+        class="absolute -right-4 top-1/2 -translate-y-1/2 p-3 bg-card-bg/90 border border-divider text-text-primary rounded-full hover:bg-surface transition-all duration-300 opacity-0 group-hover/gallery:opacity-100 hidden md:flex items-center justify-center shadow-lg z-20 cursor-pointer"
+        aria-label="Next Slide"
+      >
+        <ChevronRight class="w-5 h-5" />
+      </button>
+    </div>
+
+    <!-- Navigation indicators (Dots) -->
+    <div class="flex justify-center gap-2 mt-4">
+      {certificates.map((_, i) => (
+        <button
+          class="cert-dot w-2 h-2 rounded-full bg-divider transition-all duration-300 cursor-pointer"
+          data-index={i}
+          aria-label={`Go to slide ${i + 1}`}
+        ></button>
+      ))}
+    </div>
+  </div>
+
+  <!-- PDF Document Viewer Modal -->
+  <div
+    id="cert-modal"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 hidden"
+    role="dialog"
+    aria-modal="true"
+  >
+    <!-- Dark blurred backdrop -->
+    <div id="cert-modal-backdrop" class="absolute inset-0 bg-bg/90 backdrop-blur-md opacity-0"></div>
+    
+    <div
+      id="cert-modal-box"
+      class="relative w-full bg-card-bg border border-divider rounded-lg shadow-2xl p-4 md:p-6 z-10 flex flex-col gap-4 max-h-[85vh] transform scale-90 opacity-0 transition-[max-width,height] duration-300"
+    >
+      <div class="flex items-center justify-between border-b border-divider pb-3">
+        <div class="flex flex-col max-w-[80%]">
+          <span class="text-caption text-accent uppercase font-bold tracking-widest font-mono block" id="cert-modal-subtitle">
+            Credential Viewer
+          </span>
+          <h3 id="cert-modal-title" class="text-body font-semibold text-text-primary truncate">
+            Certificate Title
+          </h3>
+        </div>
+        <button
+          id="cert-modal-close"
+          class="p-2 text-text-secondary hover:text-text-primary rounded-full hover:bg-surface transition-colors cursor-pointer"
+          aria-label="Close PDF Viewer"
+        >
+          <X class="w-5 h-5" />
+        </button>
+      </div>
+
+      <!-- Core Content Area: Adaptive 2-Column Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow h-full overflow-hidden">
+        
+        <!-- Left Column: Courses Timeline Sidebar (shown only if sub-certs exist) -->
+        <div id="cert-sidebar-column" class="lg:col-span-4 h-full flex-col hidden overflow-hidden">
+          <h4 class="text-caption font-bold text-text-primary uppercase tracking-wider mb-3 flex items-center gap-1.5 border-b border-divider pb-2 shrink-0">
+            <BookOpen class="w-3.5 h-3.5 text-accent" />
+            <span>Course Syllabus & Modules</span>
+          </h4>
+          <div id="cert-timeline-list" class="flex-grow overflow-y-auto pr-1 flex flex-col gap-2 relative">
+            <!-- Timeline elements dynamically added via JS -->
+          </div>
+        </div>
+
+        <!-- Right Column: PDF Iframe Viewer -->
+        <div id="cert-viewer-column" class="lg:col-span-12 h-full flex flex-col bg-bg rounded overflow-hidden relative border border-divider shadow-inner">
+          <!-- Decorative HUD Corner brackets for digital blueprint frame effect -->
+          <div class="absolute top-3 left-3 w-2 h-2 border-t-2 border-l-2 border-accent/40 z-20 pointer-events-none"></div>
+          <div class="absolute top-3 right-3 w-2 h-2 border-t-2 border-r-2 border-accent/40 z-20 pointer-events-none"></div>
+          <div class="absolute bottom-3 left-3 w-2 h-2 border-b-2 border-l-2 border-accent/40 z-20 pointer-events-none"></div>
+          <div class="absolute bottom-3 right-3 w-2 h-2 border-b-2 border-r-2 border-accent/40 z-20 pointer-events-none"></div>
+          
+          <!-- Loader spinner -->
+          <div id="cert-iframe-loader" class="absolute inset-0 flex items-center justify-center text-text-muted font-mono text-caption">
+            LOADING DOCUMENT...
+          </div>
+          <iframe
+            id="cert-pdf-iframe"
+            src=""
+            class="w-full flex-grow border-0 relative z-10 hidden"
+            title="Certificate Viewer"
+          ></iframe>
+
+          <!-- Technical status HUD text overlay & Verification link -->
+          <div class="w-full bg-card-bg/60 border-t border-divider px-6 py-2.5 flex items-center justify-between shrink-0 relative z-20">
+            <span class="text-[9px] font-mono text-text-muted tracking-wider uppercase">
+              SECURE_VIEWER // STATUS: VERIFIED
+            </span>
+            <a
+              id="cert-verify-link"
+              href=""
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-[9px] font-mono text-accent hover:underline uppercase font-bold tracking-wider hidden items-center gap-1"
+            >
+              Verify Credential ↗
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Embed certificates data for client JS -->
+<div id="certs-data" data-certs={certificatesJSON} class="hidden"></div>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  window.addEventListener('DOMContentLoaded', () => {
+    // 1. Entrance Fade
+    const section = document.getElementById('certificates');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      gsap.set(section, { opacity: 1, y: 0 });
+    } else {
+      gsap.to(section, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 80%',
+          toggleActions: 'play none none none',
+        }
+      });
+    }
+
+    // 2. Adaptive PDF Viewer & Timeline Modal Setup
+    const certCards = document.querySelectorAll('.cert-card');
+    const modalEl = document.getElementById('cert-modal');
+    const backdropEl = document.getElementById('cert-modal-backdrop');
+    const boxEl = document.getElementById('cert-modal-box');
+    const closeBtn = document.getElementById('cert-modal-close');
+    const titleEl = document.getElementById('cert-modal-title');
+    const subtitleEl = document.getElementById('cert-modal-subtitle');
+    const iframeEl = document.getElementById('cert-pdf-iframe') as HTMLIFrameElement | null;
+    const loaderEl = document.getElementById('cert-iframe-loader');
+    
+    // Columns
+    const viewerColumn = document.getElementById('cert-viewer-column');
+    const sidebarColumn = document.getElementById('cert-sidebar-column');
+    const timelineList = document.getElementById('cert-timeline-list');
+    
+    const verifyLinkEl = document.getElementById('cert-verify-link') as HTMLAnchorElement | null;
+    
+    const dataContainer = document.getElementById('certs-data');
+
+    if (!modalEl || !backdropEl || !boxEl || !closeBtn || !titleEl || !subtitleEl || !iframeEl || !loaderEl || !viewerColumn || !sidebarColumn || !timelineList || !dataContainer) return;
+
+    const allCertificates = JSON.parse(dataContainer.getAttribute('data-certs') || '[]');
+    let isModalOpen = false;
+
+    // Carousel state
+    let autoScrollInterval: ReturnType<typeof setInterval> | null = null;
+    let currentCertIndex = 0;
+    
+    // Carousel Elements declarations
+    const certsTrack = document.getElementById('certs-track') as HTMLDivElement | null;
+    const certCardsList = document.querySelectorAll('.cert-card');
+    const certDots = document.querySelectorAll('.cert-dot');
+    const certsPrev = document.getElementById('certs-prev');
+    const certsNext = document.getElementById('certs-next');
+
+    const startAutoScroll = () => {
+      if (prefersReducedMotion || isModalOpen || !certsTrack || certCardsList.length === 0) return;
+      stopAutoScroll();
+      autoScrollInterval = setInterval(() => {
+        const nextIndex = (currentCertIndex + 1) % certCardsList.length;
+        scrollToCert(nextIndex);
+      }, 5000);
+    };
+
+    const stopAutoScroll = () => {
+      if (autoScrollInterval) {
+        clearInterval(autoScrollInterval);
+        autoScrollInterval = null;
+      }
+    };
+
+    const scrollToCert = (index: number) => {
+      if (!certsTrack || !certCardsList[index]) return;
+      const card = certCardsList[index] as HTMLElement;
+      const cardOffset = card.offsetLeft;
+      const trackWidth = certsTrack.clientWidth;
+      const cardWidth = card.clientWidth;
+      
+      const targetScroll = cardOffset - (trackWidth / 2) + (cardWidth / 2);
+      
+      certsTrack.scrollTo({
+        left: targetScroll,
+        behavior: 'smooth'
+      });
+    };
+
+    const loadPdf = (url: string) => {
+      loaderEl.classList.remove('hidden');
+      iframeEl.classList.add('hidden');
+      
+      // Append URL hash to hide default browser PDF viewer toolbars for a cleaner "frame only" view
+      iframeEl.src = `${url}#toolbar=0&navpanes=0&scrollbar=0`;
+      
+      iframeEl.onload = () => {
+        loaderEl.classList.add('hidden');
+        iframeEl.classList.remove('hidden');
+      };
+    };
+
+    const openCertModal = (index: number) => {
+      isModalOpen = true;
+      stopAutoScroll(); // Stop scrolling while reading
+      const cert = allCertificates[index];
+      if (!cert) return;
+
+      titleEl.textContent = cert.title;
+      subtitleEl.textContent = cert.issuer;
+
+      // Configure Credential Verification Link
+      if (verifyLinkEl) {
+        if (cert.credentialUrl) {
+          verifyLinkEl.href = cert.credentialUrl;
+          verifyLinkEl.classList.remove('hidden');
+          verifyLinkEl.classList.add('inline-flex');
+        } else {
+          verifyLinkEl.href = "";
+          verifyLinkEl.classList.remove('inline-flex');
+          verifyLinkEl.classList.add('hidden');
+        }
+      }
+
+      // Check if it has sub-certificates
+      if (cert.subCertificates && cert.subCertificates.length > 0) {
+        // Apply 2-Column responsive widths & heights
+        boxEl.style.maxWidth = "1100px";
+        boxEl.style.height = "auto"; // Flexible height matching document aspect ratio
+        
+        viewerColumn.className = "lg:col-span-8 aspect-[1.414] w-full flex flex-col bg-bg rounded overflow-hidden relative border border-divider shadow-inner";
+        sidebarColumn.className = "lg:col-span-4 flex flex-col overflow-hidden";
+        
+        // Build Timeline Syllabus HTML (Sidebar rendered first = LEFT COLUMN)
+        let timelineHTML = `
+          <!-- Main Cert Item -->
+          <div
+            class="timeline-item flex gap-3 p-3 bg-surface border border-accent/20 rounded-md cursor-pointer hover:border-accent/40 transition-all select-none"
+            data-url="${cert.url}"
+          >
+            <div class="w-1.5 bg-accent rounded-full shrink-0 my-0.5"></div>
+            <div class="flex-grow">
+              <span class="text-[9px] uppercase font-bold tracking-wider text-accent font-mono block">MAIN CREDENTIAL</span>
+              <span class="text-body-sm font-semibold text-text-primary leading-tight">${cert.title}</span>
+            </div>
+          </div>
+        `;
+
+        // Add sub-certificates
+        cert.subCertificates.forEach((sub: any, subIdx: number) => {
+          timelineHTML += `
+            <div
+              class="timeline-item flex gap-3 p-3 bg-card-bg border border-divider rounded-md cursor-pointer hover:border-accent/30 transition-all select-none"
+              data-url="${sub.url}"
+            >
+              <div class="w-1.5 bg-divider rounded-full shrink-0 my-0.5"></div>
+              <div class="flex-grow">
+                <span class="text-[9px] uppercase font-bold tracking-wider text-text-muted font-mono block">MODULE ${subIdx + 1}</span>
+                <span class="text-body-sm font-medium text-text-secondary group-hover:text-text-primary leading-tight">${sub.title}</span>
+              </div>
+            </div>
+          `;
+        });
+
+        timelineList.innerHTML = timelineHTML;
+
+        // Register Click triggers on syllabus items
+        const syllabusItems = timelineList.querySelectorAll('.timeline-item');
+        syllabusItems.forEach((item) => {
+          item.addEventListener('click', (e) => {
+            const el = e.currentTarget as HTMLDivElement;
+            const pdfUrl = el.getAttribute('data-url') || "";
+            
+            // Update active styling
+            syllabusItems.forEach((btn) => {
+              btn.classList.remove('bg-surface', 'border-accent/20');
+              btn.classList.add('bg-card-bg', 'border-divider');
+              const indicator = btn.querySelector('div');
+              if (indicator) {
+                indicator.classList.remove('bg-accent');
+                indicator.classList.add('bg-divider');
+              }
+            });
+
+            el.classList.remove('bg-card-bg', 'border-divider');
+            el.classList.add('bg-surface', 'border-accent/20');
+            const activeIndicator = el.querySelector('div');
+            if (activeIndicator) {
+              activeIndicator.classList.remove('bg-divider');
+              activeIndicator.classList.add('bg-accent');
+            }
+
+            // Load the PDF
+            if (pdfUrl) loadPdf(pdfUrl);
+          });
+        });
+
+        // Load main PDF by default
+        loadPdf(cert.url);
+
+      } else {
+        // Fallback to Single Column layout for simple certificates with flexible aspect-ratio set height
+        boxEl.style.maxWidth = "800px";
+        boxEl.style.height = "auto";
+        
+        viewerColumn.className = "lg:col-span-12 aspect-[1.414] w-full flex flex-col bg-bg rounded overflow-hidden relative border border-divider shadow-inner";
+        sidebarColumn.className = "lg:col-span-4 h-full flex-col hidden overflow-hidden";
+        timelineList.innerHTML = "";
+        
+        loadPdf(cert.url);
+      }
+
+      // Display Modal
+      modalEl.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+
+      // Animating modal open
+      gsap.to(backdropEl, { opacity: 1, duration: 0.3 });
+      gsap.to(boxEl, { opacity: 1, scale: 1, duration: 0.4, ease: 'power2.out' });
+    };
+
+    const closeCertModal = () => {
+      // Animating modal close
+      gsap.to(boxEl, {
+        opacity: 0,
+        scale: 0.95,
+        duration: 0.2,
+        onComplete: () => {
+          modalEl.classList.add('hidden');
+          document.body.classList.remove('overflow-hidden');
+          iframeEl.src = ""; // Clear src
+          isModalOpen = false;
+          startAutoScroll(); // Resume auto scroll
+        }
+      });
+      gsap.to(backdropEl, { opacity: 0, duration: 0.2 });
+    };
+
+    // Attach click listeners to cards
+    certCards.forEach((card) => {
+      card.addEventListener('click', () => {
+        const index = parseInt(card.getAttribute('data-index') || '0', 10);
+        openCertModal(index);
+      });
+    });
+
+    // Close actions
+    closeBtn.addEventListener('click', closeCertModal);
+    backdropEl.addEventListener('click', closeCertModal);
+
+    // Escape key closes modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isModalOpen) {
+        closeCertModal();
+      }
+    });
+
+    // 3. Certificates Carousel Interaction
+    if (certsTrack && certCardsList.length > 0) {
+      const updateCertsActiveState = () => {
+        if (!certsTrack) return;
+        const trackRect = certsTrack.getBoundingClientRect();
+        const trackCenter = trackRect.left + trackRect.width / 2;
+
+        let closestIndex = 0;
+        let minDistance = Infinity;
+
+        certCardsList.forEach((card, index) => {
+          const cardRect = card.getBoundingClientRect();
+          const cardCenter = cardRect.left + cardRect.width / 2;
+          const distance = Math.abs(cardCenter - trackCenter);
+
+          if (distance < minDistance) {
+            minDistance = distance;
+            closestIndex = index;
+          }
+        });
+
+        // Force edge boundary indexes if scrolled to the absolute limits to prevent loop deadlocks
+        const isAtEnd = Math.abs(certsTrack.scrollLeft + certsTrack.clientWidth - certsTrack.scrollWidth) < 20;
+        if (isAtEnd) {
+          closestIndex = certCardsList.length - 1;
+        } else if (certsTrack.scrollLeft < 15) {
+          closestIndex = 0;
+        }
+
+        currentCertIndex = closestIndex;
+
+        // Zoom center card & fade sides
+        certCardsList.forEach((card, index) => {
+          if (index === closestIndex) {
+            card.classList.remove('scale-95', 'opacity-55');
+            card.classList.add('scale-100', 'opacity-100', 'shadow-xl', 'border-accent/30');
+          } else {
+            card.classList.remove('scale-100', 'opacity-100', 'shadow-xl', 'border-accent/30');
+            card.classList.add('scale-95', 'opacity-55');
+          }
+        });
+
+        // Update Dots
+        certDots.forEach((dot, index) => {
+          if (index === closestIndex) {
+            dot.classList.remove('bg-divider', 'w-2');
+            dot.classList.add('bg-accent', 'w-6');
+          } else {
+            dot.classList.remove('bg-accent', 'w-6');
+            dot.classList.add('bg-divider', 'w-2');
+          }
+        });
+      };
+
+      // Click event for buttons
+      certsPrev?.addEventListener('click', () => {
+        const nextIndex = (currentCertIndex - 1 + certCardsList.length) % certCardsList.length;
+        scrollToCert(nextIndex);
+      });
+
+      certsNext?.addEventListener('click', () => {
+        const nextIndex = (currentCertIndex + 1) % certCardsList.length;
+        scrollToCert(nextIndex);
+      });
+
+      // Click event for dots
+      certDots.forEach((dot) => {
+        dot.addEventListener('click', (e) => {
+          const btn = e.currentTarget as HTMLButtonElement;
+          const index = parseInt(btn.getAttribute('data-index') || '0', 10);
+          scrollToCert(index);
+        });
+      });
+
+      // Mouse triggers to pause/resume auto scroll
+      certsTrack.addEventListener('mouseenter', stopAutoScroll);
+      certsTrack.addEventListener('mouseleave', startAutoScroll);
+
+      // Track scroll event to update dots & zoom center dynamically
+      let certScrollDebounce: number;
+      certsTrack.addEventListener('scroll', () => {
+        window.clearTimeout(certScrollDebounce);
+        certScrollDebounce = window.setTimeout(updateCertsActiveState, 50);
+      });
+
+      // Initialize
+      updateCertsActiveState();
+      startAutoScroll();
+    }
+  });
+</script>

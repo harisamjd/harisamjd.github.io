@@ -1,0 +1,153 @@
+---
+// @ts-check
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = "Haris A. Majid — Personal Product Website",
+  description = "Business Analyst, Digital Transformation Specialist, and R&D Process Development Engineer. Transforming business challenges into practical digital solutions with measurable impact."
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    
+    <!-- SEO Meta Tags -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://harisamajid.com" />
+    
+    <!-- Structured Data (Schema.org) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Haris Abdul Majid",
+        "jobTitle": "Business Analyst, Digital Transformation Specialist, R&D Process Development Engineer",
+        "url": "https://harisamajid.com",
+        "sameAs": [
+          "https://www.linkedin.com/in/harisam",
+          "https://wa.me/628567890858"
+        ],
+        "knowsAbout": [
+          "Business Analysis",
+          "Digital Transformation",
+          "Dashboard Development",
+          "Power Platform",
+          "R&D Dairy Process Development",
+          "Continuous Improvement"
+        ]
+      }
+    </script>
+  </head>
+  <body class="bg-bg text-text-primary selection:bg-accent selection:text-white min-h-screen flex flex-col overflow-x-hidden">
+    
+    <!-- Premium Intro Transition Loader Curtain Overlay -->
+    <div
+      id="intro-loader"
+      class="fixed inset-0 z-[9999] bg-bg flex items-center justify-center pointer-events-auto"
+    >
+      <div
+        id="loader-text"
+        class="text-heading-xl md:text-display-md text-text-primary font-bold text-center opacity-0 translate-y-6 tracking-tight px-6 select-none"
+      >
+        Hi, I'm Haris Abdul Majid
+      </div>
+    </div>
+
+    <slot name="header" />
+    
+    <main class="flex-grow">
+      <slot />
+    </main>
+
+    <slot name="footer" />
+
+    <!-- Intro and Smooth Scroll Scripting -->
+    <script>
+      import Lenis from 'lenis';
+      import gsap from 'gsap';
+
+      // Check if user prefers reduced motion
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Handle Intro Loader
+      window.addEventListener('DOMContentLoaded', () => {
+        const loader = document.getElementById('intro-loader');
+        const loaderText = document.getElementById('loader-text');
+        
+        if (!loader || !loaderText) return;
+
+        if (prefersReducedMotion) {
+          loader.remove();
+          window.dispatchEvent(new CustomEvent('intro-complete'));
+          return;
+        }
+
+        const tl = gsap.timeline({
+          onComplete: () => {
+            loader.remove(); // Remove loader overlay entirely from DOM to prevent click blocking
+            window.dispatchEvent(new CustomEvent('intro-complete'));
+          }
+        });
+
+        // 1. Fade in and slide up welcome name text
+        tl.to(loaderText, {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+        })
+        // 2. Short pause for reading comfort
+        .to(loaderText, {
+          duration: 0.8,
+        })
+        // 3. Fade out welcome text
+        .to(loaderText, {
+          opacity: 0,
+          y: -20,
+          duration: 0.4,
+          ease: 'power3.in',
+        })
+        // 4. Zoom out and fade out loader curtain to reveal main webpage
+        .to(loader, {
+          scale: 1.15,
+          opacity: 0,
+          duration: 0.8,
+          ease: 'power2.inOut',
+        });
+      });
+
+      // Handle Lenis scroll
+      if (!prefersReducedMotion) {
+        const lenis = new Lenis({
+          duration: 1.2,
+          smoothWheel: true,
+          syncTouch: false,
+        });
+
+        function raf(time: number) {
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
+
+        requestAnimationFrame(raf);
+        (window as any).lenis = lenis;
+      }
+    </script>
+  </body>
+</html>

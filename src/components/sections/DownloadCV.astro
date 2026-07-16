@@ -1,0 +1,112 @@
+---
+import { FileDown, Mail } from '@lucide/astro';
+import { getImage } from 'astro:assets';
+// Import FAZZA-3388.jpg for a premium blurred photographic background
+import cvBgImage from '../../assets/picts/FAZZA-3388.jpg';
+
+// Optimize the image
+const optimizedCvBg = await getImage({ src: cvBgImage, format: 'webp', width: 1920, quality: 75 });
+---
+
+<section
+  id="download-cv"
+  class="relative py-[120px] border-y border-divider px-6 bg-cover bg-[center_25%] bg-no-repeat transition-opacity opacity-0 transform translate-y-[40px]"
+  style={`background-image: url(${optimizedCvBg.src});`}
+  aria-labelledby="cv-heading"
+>
+  <!-- Dark vignette overlay for readibility -->
+  <div class="absolute inset-0 bg-bg/85 backdrop-blur-[3px] z-0"></div>
+
+  <div class="relative max-w-[800px] mx-auto text-center z-10">
+    <span class="text-caption text-text-muted tracking-widest uppercase font-semibold block mb-2">
+      Take Away
+    </span>
+    <h2 id="cv-heading" class="text-heading-xl text-text-primary font-bold tracking-tight mb-4">
+      Interested in Working Together?
+    </h2>
+    <p class="text-body text-text-secondary mb-10 max-w-[600px] mx-auto leading-relaxed">
+      If you'd like to know more about my experience, projects, or professional background, feel free to download my CV or connect with me directly.
+    </p>
+
+    <!-- CTAs Box -->
+    <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+      <!-- Main CV Download Button -->
+      <a
+        href="/cv-haris-abdul-majid.pdf"
+        download
+        class="w-full sm:w-auto flex items-center justify-center gap-2 text-body-sm bg-accent text-white px-8 py-3.5 rounded-md hover:bg-blue-700 transition-colors font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        id="cv-download-btn"
+      >
+        <FileDown class="w-4 h-4" />
+        <span>Download CV</span>
+      </a>
+
+      <!-- Secondary Social Links -->
+      <div class="flex gap-3 w-full sm:w-auto justify-center">
+        <a
+          href="https://www.linkedin.com/in/harisam"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="p-3 bg-card-bg border border-divider text-text-secondary hover:text-text-primary hover:border-text-secondary/20 hover:shadow-sm rounded-md transition-all duration-300 flex items-center justify-center"
+          aria-label="LinkedIn Profile"
+        >
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+          </svg>
+        </a>
+        <a
+          href="https://wa.me/628567890858"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="p-3 bg-card-bg border border-divider text-text-secondary hover:text-text-primary hover:border-text-secondary/20 hover:shadow-sm rounded-md transition-all duration-300 flex items-center justify-center"
+          aria-label="WhatsApp Profile"
+        >
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.733-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.966a9.9 9.9 0 0 0-6.98-2.879c-5.433 0-9.853 4.37-9.857 9.8.001 1.956.518 3.869 1.502 5.56l-.988 3.605 3.719-.971zm10.743-7.291c-.273-.136-1.617-.794-1.868-.885-.25-.091-.432-.136-.613.136-.182.273-.705.885-.864 1.067-.159.182-.318.205-.591.069-.272-.136-1.15-.422-2.19-1.346-.809-.72-1.354-1.61-1.513-1.883-.159-.273-.017-.42.12-.556.123-.122.273-.318.409-.477.136-.159.182-.272.272-.454.091-.182.046-.341-.023-.477-.068-.136-.613-1.477-.84-2.023-.222-.534-.442-.462-.613-.471-.159-.009-.341-.01-.523-.01-.182 0-.477.068-.727.341-.25.272-.954.932-.954 2.271 0 1.341.977 2.636 1.114 2.819.136.182 1.922 2.91 4.659 4.09.65.28 1.157.446 1.554.571.653.208 1.248.179 1.717.109.523-.078 1.617-.659 1.846-1.295.228-.636.228-1.182.159-1.295-.069-.114-.25-.182-.523-.318z"/>
+          </svg>
+        </a>
+        <a
+          href="mailto:harisamjd@gmail.com"
+          class="p-3 bg-card-bg border border-divider text-text-secondary hover:text-text-primary hover:border-text-secondary/20 hover:shadow-sm rounded-md transition-all duration-300 flex items-center justify-center"
+          aria-label="Email Me"
+        >
+          <Mail class="w-5 h-5" />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const section = document.getElementById('download-cv');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      gsap.set(section, { opacity: 1, y: 0 });
+    } else {
+      gsap.to(section, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 80%',
+          toggleActions: 'play none none none',
+        }
+      });
+    }
+
+    // Microcopy feedback trigger on download
+    const downloadBtn = document.getElementById('cv-download-btn');
+    downloadBtn?.addEventListener('click', () => {
+      console.log('Download started... Your download will begin shortly.');
+    });
+  });
+</script>

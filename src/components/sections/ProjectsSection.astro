@@ -1,0 +1,496 @@
+---
+import { projects } from '../../content/data/projects';
+import { ArrowUpRight, CheckCircle2, ChevronLeft, ChevronRight, X } from '@lucide/astro';
+
+// Pass projects data to client-side JS
+const projectsJSON = JSON.stringify(projects);
+---
+
+<section
+  id="projects"
+  class="py-[120px] bg-bg bg-grid-mesh/20 border-y border-divider px-6 transition-opacity opacity-0 transform translate-y-[40px] relative overflow-hidden"
+  aria-labelledby="projects-heading"
+>
+  <div class="max-w-[1200px] mx-auto">
+    <!-- Header -->
+    <div class="mb-12 px-4 md:px-0">
+      <span class="text-caption text-text-muted tracking-widest uppercase font-semibold block mb-2">
+        Case Studies
+      </span>
+      <h2 id="projects-heading" class="text-heading-xl text-text-primary font-bold tracking-tight mb-4">
+        Selected Projects
+      </h2>
+      <p class="text-body text-text-secondary max-w-[640px]">
+        Every project begins with understanding the problem, not choosing the technology. Click any card to open the case study and read the full details.
+      </p>
+    </div>
+
+    <!-- Gallery Container -->
+    <div class="relative group/gallery">
+      <!-- Horizontal Scroll Track -->
+      <div
+        id="projects-track"
+        class="flex overflow-x-auto gap-8 py-10 px-[10px] md:px-[15%] scrollbar-none snap-x snap-mandatory scroll-smooth cursor-pointer"
+      >
+        {projects.map((project, index) => (
+          <div
+            class="projects-card flex-shrink-0 w-[95%] sm:w-[90%] md:w-[85%] lg:w-[82%] snap-center transition-all duration-500 origin-center scale-95 opacity-55 bg-card-bg border border-divider p-6 md:p-10 rounded-lg flex flex-col gap-6 group hover:border-accent/30"
+            data-index={index}
+          >
+            <!-- Top Row metadata -->
+            <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-divider pb-4">
+              <div>
+                <span class="text-caption font-bold text-accent uppercase tracking-widest block mb-1">
+                  {project.category}
+                </span>
+                <h3 class="text-heading-lg font-bold text-text-primary group-hover:text-accent transition-colors duration-300">
+                  {project.title}
+                </h3>
+              </div>
+              
+              <div class="flex flex-wrap gap-2">
+                {project.role.map((r) => (
+                  <span class="text-caption px-2.5 py-1 bg-surface text-text-secondary border border-divider rounded font-medium">
+                    {r}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <!-- Main Case Study Content Preview -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              <!-- Columns: Problem & Solution -->
+              <div class="lg:col-span-7 flex flex-col gap-4">
+                <div>
+                  <h4 class="text-caption font-bold text-text-primary uppercase tracking-wider mb-1">
+                    The Business Problem
+                  </h4>
+                  <p class="text-body-sm text-text-secondary leading-relaxed line-clamp-2">
+                    {project.problem}
+                  </p>
+                </div>
+
+                <div>
+                  <h4 class="text-caption font-bold text-text-primary uppercase tracking-wider mb-1">
+                    The Solution
+                  </h4>
+                  <p class="text-body-sm text-text-secondary leading-relaxed line-clamp-2">
+                    {project.solution}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Column: Business Impact -->
+              <div class="lg:col-span-5 flex flex-col gap-4 bg-surface/50 border border-divider p-5 rounded-md">
+                <div>
+                  <h4 class="text-caption font-bold text-text-primary uppercase tracking-wider mb-2">
+                    Measurable Impact
+                  </h4>
+                  <ul class="flex flex-col gap-2">
+                    {project.impacts.slice(0, 2).map((imp) => (
+                      <li class="flex items-start gap-2 text-body-sm text-text-secondary leading-normal line-clamp-1">
+                        <CheckCircle2 class="w-3.5 h-3.5 text-accent shrink-0 mt-0.5" />
+                        <span>{imp}</span>
+                      </li>
+                    ))}
+                    {project.impacts.length > 2 && (
+                      <li class="text-caption text-accent font-medium mt-1">
+                        + Read full impacts in detail
+                      </li>
+                    )}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Action Row -->
+            <div class="flex items-center justify-between pt-4 border-t border-divider mt-auto">
+              <span class="text-caption text-text-muted italic">
+                Click to expand details &bull; Case study verified
+              </span>
+              
+              <span class="text-body-sm text-accent font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                <span>View Details</span>
+                <ArrowUpRight class="w-4 h-4" />
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Left / Right Desktop navigation buttons -->
+      <button
+        id="projects-prev"
+        class="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-card-bg/90 border border-divider text-text-primary rounded-full hover:bg-surface transition-all duration-300 opacity-0 group-hover/gallery:opacity-100 hidden md:flex items-center justify-center shadow-lg z-20 cursor-pointer"
+        aria-label="Previous Slide"
+      >
+        <ChevronLeft class="w-5 h-5" />
+      </button>
+      <button
+        id="projects-next"
+        class="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-card-bg/90 border border-divider text-text-primary rounded-full hover:bg-surface transition-all duration-300 opacity-0 group-hover/gallery:opacity-100 hidden md:flex items-center justify-center shadow-lg z-20 cursor-pointer"
+        aria-label="Next Slide"
+      >
+        <ChevronRight class="w-5 h-5" />
+      </button>
+    </div>
+
+    <!-- Navigation indicators (Dots) -->
+    <div class="flex justify-center gap-2 mt-6">
+      {projects.map((_, i) => (
+        <button
+          class="project-dot w-2 h-2 rounded-full bg-divider transition-all duration-300 cursor-pointer"
+          data-index={i}
+          aria-label={`Go to slide ${i + 1}`}
+        ></button>
+      ))}
+    </div>
+  </div>
+
+  <!-- Detail Modal Overlay -->
+  <div
+    id="project-modal"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6 hidden"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div id="modal-backdrop" class="absolute inset-0 bg-bg/90 backdrop-blur-md opacity-0"></div>
+    
+    <div
+      id="modal-box"
+      class="relative w-full max-w-[800px] bg-card-bg border border-divider rounded-lg shadow-2xl p-6 md:p-10 z-10 max-h-[85vh] overflow-y-auto transform scale-90 opacity-0"
+    >
+      <button
+        id="modal-close"
+        class="absolute top-4 right-4 p-2 text-text-secondary hover:text-text-primary rounded-full hover:bg-surface transition-colors cursor-pointer"
+        aria-label="Close modal"
+      >
+        <X class="w-5 h-5" />
+      </button>
+      
+      <div id="modal-content" class="flex flex-col gap-6">
+        <!-- Content gets populated dynamically via JavaScript -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Embed project data for client JS -->
+<div id="projects-data" data-projects={projectsJSON} class="hidden"></div>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  window.addEventListener('DOMContentLoaded', () => {
+    // 1. Entrance Fade
+    const section = document.getElementById('projects');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      gsap.set(section, { opacity: 1, y: 0 });
+    } else {
+      gsap.to(section, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 80%',
+          toggleActions: 'play none none none',
+        }
+      });
+    }
+
+    // 2. Carousel Interaction Logic
+    const track = document.getElementById('projects-track') as HTMLDivElement | null;
+    const cards = document.querySelectorAll('.projects-card');
+    const dots = document.querySelectorAll('.project-dot');
+    const prevBtn = document.getElementById('projects-prev');
+    const nextBtn = document.getElementById('projects-next');
+
+    if (!track || cards.length === 0) return;
+
+    let currentIndex = 0;
+    let autoScrollInterval: ReturnType<typeof setInterval> | null = null;
+    let isModalOpen = false;
+
+    const updateActiveState = () => {
+      if (!track) return;
+      const trackRect = track.getBoundingClientRect();
+      const trackCenter = trackRect.left + trackRect.width / 2;
+
+      let closestCardIndex = 0;
+      let minDistance = Infinity;
+
+      cards.forEach((card, index) => {
+        const cardRect = card.getBoundingClientRect();
+        const cardCenter = cardRect.left + cardRect.width / 2;
+        const distance = Math.abs(cardCenter - trackCenter);
+
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestCardIndex = index;
+        }
+      });
+
+      currentIndex = closestCardIndex;
+
+      // Update Card Visuals (Zoom center card)
+      cards.forEach((card, index) => {
+        if (index === closestCardIndex) {
+          card.classList.remove('scale-95', 'opacity-55');
+          card.classList.add('scale-100', 'opacity-100', 'shadow-xl', 'border-accent/30');
+        } else {
+          card.classList.remove('scale-100', 'opacity-100', 'shadow-xl', 'border-accent/30');
+          card.classList.add('scale-95', 'opacity-55');
+        }
+      });
+
+      // Update Dots
+      dots.forEach((dot, index) => {
+        if (index === closestCardIndex) {
+          dot.classList.remove('bg-divider', 'w-2');
+          dot.classList.add('bg-accent', 'w-6');
+        } else {
+          dot.classList.remove('bg-accent', 'w-6');
+          dot.classList.add('bg-divider', 'w-2');
+        }
+      });
+    };
+
+    // Scroll listener
+    let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
+    track.addEventListener('scroll', () => {
+      if (scrollTimeout) cancelAnimationFrame(scrollTimeout as unknown as number);
+      scrollTimeout = requestAnimationFrame(updateActiveState) as unknown as ReturnType<typeof setTimeout>;
+    });
+
+    const scrollToCard = (index: number) => {
+      if (!track || !cards[index]) return;
+      const card = cards[index] as HTMLElement;
+      const cardOffset = card.offsetLeft;
+      const trackWidth = track.clientWidth;
+      const cardWidth = card.clientWidth;
+      
+      // Scroll track to align the card in the center
+      const targetScroll = cardOffset - (trackWidth / 2) + (cardWidth / 2);
+      
+      track.scrollTo({
+        left: targetScroll,
+        behavior: 'smooth'
+      });
+    };
+
+    prevBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const prevIndex = (currentIndex - 1 + cards.length) % cards.length;
+      scrollToCard(prevIndex);
+    });
+
+    nextBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const nextIndex = (currentIndex + 1) % cards.length;
+      scrollToCard(nextIndex);
+    });
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const target = e.currentTarget as HTMLButtonElement;
+        const index = parseInt(target.getAttribute('data-index') || '0', 10);
+        scrollToCard(index);
+      });
+    });
+
+    const startAutoScroll = () => {
+      if (prefersReducedMotion || isModalOpen) return;
+      stopAutoScroll();
+      autoScrollInterval = setInterval(() => {
+        const nextIndex = (currentIndex + 1) % cards.length;
+        scrollToCard(nextIndex);
+      }, 5000);
+    };
+
+    const stopAutoScroll = () => {
+      if (autoScrollInterval) {
+        clearInterval(autoScrollInterval);
+        autoScrollInterval = null;
+      }
+    };
+
+    track.addEventListener('mouseenter', stopAutoScroll);
+    track.addEventListener('mouseleave', startAutoScroll);
+    track.addEventListener('touchstart', stopAutoScroll, { passive: true });
+    track.addEventListener('touchend', startAutoScroll, { passive: true });
+
+    updateActiveState();
+    startAutoScroll();
+
+    // 3. Modal Popup Logic
+    const modalEl = document.getElementById('project-modal');
+    const backdropEl = document.getElementById('modal-backdrop');
+    const boxEl = document.getElementById('modal-box');
+    const closeBtn = document.getElementById('modal-close');
+    const contentEl = document.getElementById('modal-content');
+    const dataContainer = document.getElementById('projects-data');
+
+    if (!modalEl || !backdropEl || !boxEl || !closeBtn || !contentEl || !dataContainer) return;
+
+    const allProjects = JSON.parse(dataContainer.getAttribute('data-projects') || '[]');
+
+    const openModal = (index: number) => {
+      isModalOpen = true;
+      stopAutoScroll();
+      
+      const project = allProjects[index];
+      if (!project) return;
+
+      // Populate Modal Content
+      contentEl.innerHTML = `
+        <div class="border-b border-divider pb-4">
+          <span class="text-caption font-bold text-accent uppercase tracking-widest block mb-1">
+            ${project.category}
+          </span>
+          <h3 class="text-display-md font-bold text-text-primary leading-tight">
+            ${project.title}
+          </h3>
+          <div class="flex flex-wrap gap-2 mt-3">
+            ${project.role.map((r: string) => `
+              <span class="text-caption px-2.5 py-1 bg-surface text-text-secondary border border-divider rounded font-medium">
+                ${r}
+              </span>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+          <div class="md:col-span-7 flex flex-col gap-6">
+            <div>
+              <h4 class="text-body-sm font-bold text-text-primary uppercase tracking-wider mb-2">
+                The Business Problem
+              </h4>
+              <p class="text-body text-text-secondary leading-relaxed">
+                ${project.problem}
+              </p>
+            </div>
+            
+            <div>
+              <h4 class="text-body-sm font-bold text-text-primary uppercase tracking-wider mb-2">
+                The Solution
+              </h4>
+              <p class="text-body text-text-secondary leading-relaxed">
+                ${project.solution}
+              </p>
+            </div>
+          </div>
+
+          <div class="md:col-span-5 flex flex-col gap-6 bg-surface/50 border border-divider p-6 rounded-md">
+            <div>
+              <h4 class="text-body-sm font-bold text-text-primary uppercase tracking-wider mb-3">
+                Measurable Impact
+              </h4>
+              <ul class="flex flex-col gap-3">
+                ${project.impacts.map((imp: string) => `
+                  <li class="flex items-start gap-2.5 text-body-sm text-text-secondary leading-normal">
+                    <span class="text-accent shrink-0 mt-0.5">✓</span>
+                    <span>${imp}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+
+            <div>
+              <h4 class="text-caption font-bold text-text-primary uppercase tracking-wider mb-2">
+                Technologies Applied
+              </h4>
+              <div class="flex flex-wrap gap-1.5">
+                ${project.techStack.map((tech: string) => `
+                  <span class="text-caption px-2 py-0.5 bg-bg border border-divider text-text-muted rounded font-mono">
+                    ${tech}
+                  </span>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-between pt-6 border-t border-divider gap-4">
+          <span class="text-caption text-text-muted italic">
+            Case study verified &bull; Haris Abdul Majid
+          </span>
+          <div class="flex gap-4 w-full sm:w-auto">
+            ${project.demoUrl ? `
+              <a
+                href="${project.demoUrl}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="w-full sm:w-auto text-center flex items-center justify-center gap-1.5 text-body-sm bg-accent text-white px-5 py-2.5 rounded hover:bg-blue-700 transition-colors font-semibold"
+              >
+                <span>Open Demo</span>
+                <span>↗</span>
+              </a>
+            ` : ''}
+            ${project.githubUrl ? `
+              <a
+                href="${project.githubUrl}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="w-full sm:w-auto text-center flex items-center justify-center gap-1.5 text-body-sm bg-surface border border-divider text-text-secondary hover:text-text-primary px-5 py-2.5 rounded transition-all font-semibold"
+              >
+                <span>View Source</span>
+                <span>↗</span>
+              </a>
+            ` : ''}
+          </div>
+        </div>
+      `;
+
+      // Show Modal
+      modalEl.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+
+      // Animating Modal Box & Backdrop
+      gsap.to(backdropEl, { opacity: 1, duration: 0.3 });
+      gsap.to(boxEl, { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: 'back.out(1.7)' });
+    };
+
+    const closeModal = () => {
+      // Animating out
+      gsap.to(boxEl, {
+        opacity: 0,
+        scale: 0.95,
+        duration: 0.2,
+        onComplete: () => {
+          modalEl.classList.add('hidden');
+          document.body.classList.remove('overflow-hidden');
+          isModalOpen = false;
+          startAutoScroll();
+        }
+      });
+      gsap.to(backdropEl, { opacity: 0, duration: 0.2 });
+    };
+
+    // Card Clicks trigger Modal
+    cards.forEach((card) => {
+      card.addEventListener('click', () => {
+        const index = parseInt(card.getAttribute('data-index') || '0', 10);
+        openModal(index);
+      });
+    });
+
+    // Close Actions
+    closeBtn.addEventListener('click', closeModal);
+    backdropEl.addEventListener('click', closeModal);
+
+    // Keyboard support (Escape key closes modal)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isModalOpen) {
+        closeModal();
+      }
+    });
+  });
+</script>

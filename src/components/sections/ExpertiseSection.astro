@@ -1,0 +1,127 @@
+---
+import { expertisePillars } from '../../content/data/expertise';
+import { Briefcase, Cpu, BarChart3, FlaskConical } from '@lucide/astro';
+
+// Map icon component dynamically
+const iconMap: Record<string, any> = {
+  "business-analysis": Briefcase,
+  "digital-trans": Cpu,
+  "dashboard-analytics": BarChart3,
+  "rd-process": FlaskConical
+};
+---
+
+<section
+  id="expertise"
+  class="py-[120px] bg-bg bg-grid-mesh/20 border-y border-divider px-6 transition-opacity opacity-0 transform translate-y-[40px]"
+  aria-labelledby="expertise-heading"
+>
+  <div class="max-w-[1100px] mx-auto">
+    <!-- Header -->
+    <div class="mb-16">
+      <span class="text-caption text-text-muted tracking-widest uppercase font-semibold block mb-2">
+        Core Capabilities
+      </span>
+      <h2 id="expertise-heading" class="text-heading-xl text-text-primary font-bold tracking-tight mb-4">
+        How I Create Value
+      </h2>
+      <p class="text-body text-text-secondary max-w-[640px]">
+        Bridging the gap between engineering efficiency, operational datasets, and business requirements to deliver sustainable solutions.
+      </p>
+    </div>
+
+    <!-- Grid of Expertise Pillars -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {expertisePillars.map((pillar) => {
+        const IconComponent = iconMap[pillar.id];
+        return (
+          <div class="bg-card-bg border border-divider p-8 rounded-md hover:scale-[1.01] hover:-translate-y-1 hover:border-accent/30 hover:shadow-md transition-all duration-300 flex flex-col justify-between group">
+            <div>
+              <!-- Icon Header -->
+              <div class="flex items-center gap-4 mb-6">
+                <div class="p-3 bg-surface rounded-md text-text-secondary group-hover:text-accent group-hover:bg-blue-50 transition-all duration-300">
+                  {IconComponent && <IconComponent class="w-6 h-6" />}
+                </div>
+                <h3 class="text-heading-sm font-semibold text-text-primary group-hover:text-accent transition-colors duration-300">
+                  {pillar.title}
+                </h3>
+              </div>
+
+              <!-- Description -->
+              <p class="text-body-sm text-text-secondary leading-relaxed mb-6">
+                {pillar.description}
+              </p>
+
+              <!-- Skills & Tools -->
+              <div class="flex flex-col gap-4 mb-6">
+                <div>
+                  <h4 class="text-caption font-semibold text-text-primary uppercase tracking-wider mb-2">
+                    Key Areas
+                  </h4>
+                  <div class="flex flex-wrap gap-2">
+                    {pillar.skills.map((skill) => (
+                      <span class="text-caption px-2.5 py-1 bg-surface text-text-secondary rounded font-medium">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h4 class="text-caption font-semibold text-text-primary uppercase tracking-wider mb-2">
+                    Tools & Technologies
+                  </h4>
+                  <div class="flex flex-wrap gap-2">
+                    {pillar.tools.map((tool) => (
+                      <span class="text-caption px-2.5 py-1 bg-surface text-text-muted rounded font-mono">
+                        {tool}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Impact highlight footer -->
+            <div class="pt-4 border-t border-divider mt-4">
+              <span class="text-caption font-bold text-accent uppercase tracking-widest block mb-1">
+                Real-World Impact
+              </span>
+              <p class="text-body-sm text-text-primary font-medium">
+                {pillar.realWorldImpact}
+              </p>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const section = document.getElementById('expertise');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      gsap.set(section, { opacity: 1, y: 0 });
+    } else {
+      gsap.to(section, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 80%',
+          toggleActions: 'play none none none',
+        }
+      });
+    }
+  });
+</script>
