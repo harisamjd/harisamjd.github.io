@@ -13,13 +13,13 @@ export const personalInfo = {
     "Digital Transformation Specialist",
     "R&D Process Development Engineer"
   ],
-  tagline: "Transforming Business Challenges into Practical Digital Solutions.",
+  tagline: "Engineering Processes, Empowering Data, Digitalizing Solutions",
   currentPosition: "R&D Dairy Process Development",
-  location: "Indonesia",
+  location: "Bogor / Solo, Indonesia",
   summary: [
-    "I began my career in Food Technology, focusing on manufacturing process improvement and product development within the FMCG industry.",
-    "Throughout my career, I became increasingly interested in solving operational problems beyond the production floor. This led me to explore workflow automation, business analysis, dashboard development, and digital transformation initiatives.",
-    "Today, I combine engineering thinking with analytical problem-solving to build practical solutions that improve operational efficiency, support better decision-making, and create measurable business value."
+    "I began my career as a Management Trainee and transitioned into R&D Process Development, focusing on manufacturing process improvement and product development within the FMCG industry.",
+    "Throughout my career in R&D, I realized that process optimization extends far beyond the production floor. This motivated me to bridge the gap between physical operations and digital systems, exploring data analysis, workflow automation, dashboard development, and business analysis.",
+    "Today, I combine my R&D engineering foundation with data-driven analytics to architect digital solutions. By transforming raw operational data into interactive dashboards and automated workflows, I build practical systems that optimize efficiency and enable better business decisions."
   ],
   philosophy: "I believe technology should simplify work rather than complicate it. The best solutions are not always the most complex—they are the ones that solve real business problems efficiently and sustainably.",
   principles: [
