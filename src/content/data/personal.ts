@@ -4,6 +4,12 @@ export interface TimelineItem {
   role: string;
   company: string;
   description: string;
+  branches?: {
+    role: string;
+    company: string;
+    description: string;
+    badge: string;
+  }[];
 }
 
 export const personalInfo = {
@@ -34,37 +40,51 @@ export const personalInfo = {
 export const careerTimeline: TimelineItem[] = [
   {
     id: "food-tech",
-    period: "Early Career",
-    role: "Food Technology Researcher",
-    company: "Manufacturing Operations",
-    description: "Learned to solve complex operational and process challenges using structured experiments, root cause analysis (RCA), and continuous improvement methods."
+    period: "Background",
+    role: "Food Tech Engineer",
+    company: "R&D Foundations",
+    description: "Gained a strong foundation in adopting data & technology in food manufacture. Solved manufacturing process challenges using structured experiments, root cause analysis (RCA), and continuous improvement methods."
   },
   {
     id: "management-trainee",
-    period: "Transition Phase",
+    period: "Early Career",
     role: "Management Trainee",
     company: "Great Giant Foods",
-    description: "Rotated across departments to understand end-to-end business operations, supply chains, and management workflows."
+    description: "Rotated across key business departments to grasp end-to-end operational flows, supply chain metrics, and corporate process workflows."
   },
   {
     id: "rd-process",
     period: "Core Technical Role",
     role: "R&D Process Development",
     company: "Dairy Division",
-    description: "Developed dairy products from lab scale to commercial production. Optimized COGM, supported process validation, and analyzed production waste."
+    description: "Scaled dairy formulations from lab to commercial lines. Focused on physical engineering metrics, optimizing COGM, and implementing protocols to minimize production waste."
   },
   {
     id: "digital-trans",
-    period: "Modern Focus",
-    role: "Digital Transformation Lead",
-    company: "Operations & Tech",
-    description: "Identified manual workflow bottlenecks and initiated digital upgrades. Replaced manual spreadsheets with automated data inputs."
+    period: "Expansion Technical Skills",
+    role: "Systems & Digital Transformation Lead",
+    company: "Operations & Technology",
+    description: "Began transitioning workflows from physical to digital. Automated manual tracking spreadsheets with customized databases, dynamic entry apps, and live operational dashboards."
   },
   {
     id: "business-analysis",
-    period: "Current / Specialization",
-    role: "Business Analyst",
-    company: "Solutions Architecture",
-    description: "Connecting operational requirements with technical blueprints. Developing BI dashboards and Power Platform systems to support decisions."
+    period: "Current Specialization",
+    role: "",
+    company: "",
+    description: "",
+    branches: [
+      {
+        role: "Business Analyst & Solutions Architect",
+        company: "Digital Solutions Division",
+        description: "Designing dynamic software blueprints, dashboard products, and automated process workflows to guide data-driven business decisions.",
+        badge: "BA Focus"
+      },
+      {
+        role: "R&D Process Engineer",
+        company: "Manufacturing Division",
+        description: "Optimizing physical processing lines, monitoring batch COGM, and executing commercial process scale-ups.",
+        badge: "R&D Focus"
+      }
+    ]
   }
 ];
