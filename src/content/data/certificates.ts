@@ -20,7 +20,7 @@ export const certificates: Certificate[] = [
     id: "google-data-analytics",
     title: "Google Data Analytics Professional Certificate",
     issuer: "Google (via Coursera)",
-    issueDate: "2023",
+    issueDate: "2024",
     url: "/docs/1.0 Data Analytics Main.pdf",
     type: "Certification",
     logoKey: "google-coursera",
@@ -97,7 +97,7 @@ export const certificates: Certificate[] = [
     id: "shelf-life-determination",
     title: "Sertifikasi Penentuan Shelf Life Produk Pangan",
     issuer: "Anugerah Global Superintending (Saraswanti)",
-    issueDate: "2023",
+    issueDate: "2026",
     url: "/docs/4. Certification - Penentuan Shelf Life.pdf",
     type: "Certification",
     logoKey: "ags"
@@ -106,7 +106,7 @@ export const certificates: Certificate[] = [
     id: "cawd-ai-web-developer",
     title: "Certified AI Web Developer (CAWD)",
     issuer: "Vibecoding.id",
-    issueDate: "2023",
+    issueDate: "2026",
     url: "/docs/6. Certification - CAWD.pdf",
     type: "Certification",
     logoKey: "vibecoding",
@@ -116,7 +116,7 @@ export const certificates: Certificate[] = [
     id: "camd-ai-mobile-developer",
     title: "Certified AI Mobile Developer (CAMD)",
     issuer: "Vibecoding.id",
-    issueDate: "2023",
+    issueDate: "2026",
     url: "/docs/5. Certification - CAMD.pdf",
     type: "Certification",
     logoKey: "vibecoding",
@@ -125,26 +125,26 @@ export const certificates: Certificate[] = [
   {
     id: "supervisory-leadership",
     title: "Supervisory Leadership Training",
-    issuer: "BSI (British Standard Institution)",
-    issueDate: "2023",
+    issuer: "PQM",
+    issueDate: "2022",
     url: "/docs/9. Training - Supervisory Leadership.pdf",
     type: "Training",
-    logoKey: "bsi"
+    logoKey: "pqm"
   },
   {
     id: "lean-six-sigma-course",
     title: "Lean & Six Sigma Course",
-    issuer: "PQM",
-    issueDate: "2023",
+    issuer: "BSI (British Standard Institution)",
+    issueDate: "2022",
     url: "/docs/8. Training - Lean & Six Sigma Course.pdf",
     type: "Training",
-    logoKey: "pqm"
+    logoKey: "bsi"
   },
   {
     id: "smart-presentation-skill",
     title: "Smart Presentation Skill",
     issuer: "Presenta",
-    issueDate: "2023",
+    issueDate: "2022",
     url: "/docs/10. Training - Smart Presentation Skill.pdf",
     type: "Training",
     logoKey: "presenta"
