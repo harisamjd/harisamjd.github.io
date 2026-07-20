@@ -139,6 +139,33 @@ export const projects: Project[] = [
     ]
   },
   {
+    id: "gedanggoreng",
+    title: "GedangGoreng: Stock Analysis & Screener Platform",
+    category: "Financial Data & Analytics",
+    role: ["Full Stack Developer", "Financial Analyst"],
+    problem: "Stock investors struggle to manually backtest target price predictions, filter broker transactional patterns (bandarmologi) across multiple timeframes, and synthesize macro global sentiment before the market opens.",
+    challenge: "Integrating fragmented broker data summary feeds, managing high-volume API requests within rate limits, and processing real-time market sentiment securely.",
+    solution: "Developed a custom Web App with Next.js framework. Integrated with Supabase platform featuring a custom multi-criteria screener (Breakout, Multibagger, Insider, and Shark/Broker Inventory), dynamic bulk data monitoring, and an automated Morning Briefing system compiling global indices, commodities, and Forex IDR impact metrics with real-time market data integrated from Stockbit.",
+    impacts: [
+      "Transformed a 2-hour manual market screening routine into a 5-second automated bulk process.",
+      "Enabled dynamic hit-rate analytics (R1, Max, and Total Hit Rates) to backtest prediction accuracy.",
+      "Automated classification of top-3 broker market behaviors (Whale, Smart Money, Retail, Mix) across various trading day intervals (3, 5, 10, 20, 50 days).",
+      "Synthesized real-time global financial data into a unified Morning Briefing pre-market dashboard."
+    ],
+    techStack: ["Next.js", "TypeScript", "Supabase", "Tailwind CSS", "Google Gemini AI", "TradingView API"],
+    softSkills: ["Data Analytics", "Data Visualization", "Capital Market Analysis", "Quantitative Analysis"],
+    demoUrl: "https://gedanggoreng.netlify.app",
+    images: [
+      "/images/projects/gedanggoreng/1.png",
+      "/images/projects/gedanggoreng/2.png",
+      "/images/projects/gedanggoreng/3.png",
+      "/images/projects/gedanggoreng/4.png",
+      "/images/projects/gedanggoreng/5.png",
+      "/images/projects/gedanggoreng/6.png",
+      "/images/projects/gedanggoreng/7.png"
+    ]
+  },
+  {
     id: "trial-management-system",
     title: "Trial Management System",
     category: "R&D Digital Transformation",

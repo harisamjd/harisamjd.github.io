@@ -296,6 +296,9 @@ import ContactSection from '../components/sections/ContactSection.astro';
         currentSlide = 0;
         currentTimelineStep = 0;
         updateSlideState();
+        
+        // Dispatch custom event to reset and play typewriter animation in Hero
+        window.dispatchEvent(new CustomEvent('presentation-start'));
       };
 
       const stopPresentation = () => {
@@ -397,6 +400,13 @@ import ContactSection from '../components/sections/ContactSection.astro';
       document.addEventListener('keydown', (e) => {
         if (!document.documentElement.classList.contains('presentation-active')) return;
         
+        // If a modal is open, let the user scroll/navigate inside the modal, do not intercept keys (except Escape)
+        const isModalOpen = document.getElementById('project-modal')?.classList.contains('hidden') === false || 
+                             document.getElementById('cert-modal')?.classList.contains('hidden') === false ||
+                             document.getElementById('cv-popup-modal')?.classList.contains('hidden') === false;
+                             
+        if (isModalOpen && e.key !== 'Escape') return;
+
         const activeSection = sections[currentSlide];
         const isHorizontalSection = activeSection && (
           activeSection.id === 'journey' || 
@@ -433,6 +443,14 @@ import ContactSection from '../components/sections/ContactSection.astro';
       // Mouse wheel support (with debounce)
       window.addEventListener('wheel', (e) => {
         if (!document.documentElement.classList.contains('presentation-active')) return;
+        
+        // If a modal is open, let the user scroll inside the modal, do not intercept wheel scroll
+        const isModalOpen = document.getElementById('project-modal')?.classList.contains('hidden') === false || 
+                             document.getElementById('cert-modal')?.classList.contains('hidden') === false ||
+                             document.getElementById('cv-popup-modal')?.classList.contains('hidden') === false;
+                             
+        if (isModalOpen) return;
+
         e.preventDefault();
         if (isScrolling) return;
 

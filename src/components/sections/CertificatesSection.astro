@@ -54,7 +54,7 @@ const certificatesJSON = JSON.stringify(certificates);
       >
         {certificates.map((cert, index) => (
           <div
-            class="cert-card flex-shrink-0 w-[295px] md:w-[340px] snap-center bg-card-bg border border-divider p-6 rounded-md hover:-translate-y-1 hover:border-accent/30 hover:shadow-md transition-all duration-500 origin-center scale-95 opacity-55 flex flex-col justify-between group cursor-pointer"
+            class="cert-card flex-shrink-0 w-[310px] md:w-[410px] lg:w-[450px] snap-center bg-card-bg border border-divider p-6 rounded-md hover:-translate-y-1 hover:border-accent/30 hover:shadow-md transition-all duration-500 origin-center scale-95 opacity-55 flex flex-col justify-between group cursor-pointer"
             data-index={index}
           >
             <!-- Card Header: Logo & Type Badge -->
@@ -293,6 +293,11 @@ const certificatesJSON = JSON.stringify(certificates);
     const dataContainer = document.getElementById('certs-data');
 
     if (!modalEl || !backdropEl || !boxEl || !closeBtn || !titleEl || !subtitleEl || !iframeEl || !loaderEl || !viewerColumn || !sidebarColumn || !timelineList || !dataContainer) return;
+
+    // Teleport modal to document body to prevent CSS transform positioning bug in slide view
+    if (modalEl.parentNode !== document.body) {
+      document.body.appendChild(modalEl);
+    }
 
     const allCertificates = JSON.parse(dataContainer.getAttribute('data-certs') || '[]');
     let isModalOpen = false;

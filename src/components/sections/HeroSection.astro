@@ -215,5 +215,26 @@ const optimizedHeroBg = await getImage({ src: heroBgImage, format: 'webp', width
 
     // Synchronize starting the hero timeline after the intro curtain has completely slid up
     window.addEventListener('intro-complete', triggerHeroTimeline);
+
+    // Listen for presentation start to reset and re-trigger typewriter
+    window.addEventListener('presentation-start', () => {
+      charIdx = 0;
+      if (typingTarget) {
+        typingTarget.textContent = "";
+      }
+      
+      // Re-create typing cursor if it was removed
+      let cursor = document.getElementById('hero-typing-cursor');
+      if (!cursor && headline) {
+        cursor = document.createElement('span');
+        cursor.id = 'hero-typing-cursor';
+        cursor.className = 'text-accent animate-pulse font-light select-none font-mono';
+        cursor.textContent = '|';
+        headline.appendChild(cursor);
+      }
+      
+      // Re-trigger typewriter animation
+      runTypewriter();
+    });
   });
 </script>

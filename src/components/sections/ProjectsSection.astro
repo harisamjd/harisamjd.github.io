@@ -34,7 +34,7 @@ const projectsJSON = JSON.stringify(projects);
       >
         {projects.map((project, index) => (
           <div
-            class="projects-card flex-shrink-0 w-[95%] sm:w-[90%] md:w-[85%] lg:w-[82%] snap-center transition-all duration-500 origin-center scale-95 opacity-55 bg-card-bg border border-divider p-6 md:p-10 rounded-lg flex flex-col gap-6 group hover:border-accent/30"
+            class="projects-card flex-shrink-0 w-[95%] sm:w-[94%] md:w-[90%] lg:w-[88%] snap-center transition-all duration-500 origin-center scale-95 opacity-55 bg-card-bg border border-divider p-6 md:p-10 rounded-lg flex flex-col gap-6 group hover:border-accent/30"
             data-index={index}
           >
             <!-- Top Row metadata -->
@@ -180,7 +180,7 @@ const projectsJSON = JSON.stringify(projects);
     <div
       id="modal-box"
       data-lenis-prevent
-      class="relative w-full max-w-[800px] bg-card-bg border border-divider rounded-lg shadow-2xl p-6 md:p-10 z-10 max-h-[85vh] overflow-y-auto transform scale-90 opacity-0"
+      class="relative w-full max-w-[1100px] bg-card-bg border border-divider rounded-lg shadow-2xl p-6 md:p-10 z-10 max-h-[85vh] overflow-y-auto transform scale-90 opacity-0"
     >
       <button
         id="modal-close"
@@ -362,6 +362,11 @@ const projectsJSON = JSON.stringify(projects);
 
     if (!modalEl || !backdropEl || !boxEl || !closeBtn || !contentEl || !dataContainer) return;
 
+    // Teleport modal to document body to prevent CSS transform positioning bug in slide view
+    if (modalEl.parentNode !== document.body) {
+      document.body.appendChild(modalEl);
+    }
+
     const allProjects = JSON.parse(dataContainer.getAttribute('data-projects') || '[]');
 
     const openModal = (index: number) => {
@@ -421,25 +426,40 @@ const projectsJSON = JSON.stringify(projects);
 
       // Populate Modal Content
       contentEl.innerHTML = `
-        <div class="border-b border-divider pb-4">
-          <span class="text-caption font-bold text-accent uppercase tracking-widest block mb-1">
-            ${project.category}
-          </span>
-          <h3 class="text-display-md font-bold text-text-primary leading-tight flex items-center gap-3 flex-wrap">
-            <span>${project.title}</span>
-            ${project.status ? `
-              <span class="inline-flex items-center text-[11px] tracking-wider font-bold uppercase px-2.5 py-0.5 bg-accent/10 border border-accent/20 text-accent rounded-full">
-                ${project.status}
-              </span>
-            ` : ''}
-          </h3>
-          <div class="flex flex-wrap gap-2 mt-3">
-            ${project.role.map((r: string) => `
-              <span class="text-caption px-2.5 py-1 bg-surface text-text-secondary border border-divider rounded font-medium">
-                ${r}
-              </span>
-            `).join('')}
+        <div class="border-b border-divider pb-4 flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+          <div>
+            <span class="text-caption font-bold text-accent uppercase tracking-widest block mb-1">
+              ${project.category}
+            </span>
+            <h3 class="text-display-md font-bold text-text-primary leading-tight flex items-center gap-3 flex-wrap">
+              <span>${project.title}</span>
+              ${project.status ? `
+                <span class="inline-flex items-center text-[11px] tracking-wider font-bold uppercase px-2.5 py-0.5 bg-accent/10 border border-accent/20 text-accent rounded-full">
+                  ${project.status}
+                </span>
+              ` : ''}
+            </h3>
+            <div class="flex flex-wrap gap-2 mt-3">
+              ${project.role.map((r: string) => `
+                <span class="text-caption px-2.5 py-1 bg-surface text-text-secondary border border-divider rounded font-medium">
+                  ${r}
+                </span>
+              `).join('')}
+            </div>
           </div>
+          ${project.demoUrl ? `
+            <div class="shrink-0 w-full sm:w-auto">
+              <a
+                href="${project.demoUrl}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-body-sm bg-accent text-white px-5 py-2.5 rounded hover:bg-blue-600 transition-colors font-bold shadow-lg animate-pulse-glow"
+              >
+                <span>Try the App</span>
+                <span>↗</span>
+              </a>
+            </div>
+          ` : ''}
         </div>
 
         ${imagesHtml}
@@ -515,17 +535,6 @@ const projectsJSON = JSON.stringify(projects);
             Case study verified &bull; Haris Abdul Majid
           </span>
           <div class="flex gap-4 w-full sm:w-auto">
-            ${project.demoUrl ? `
-              <a
-                href="${project.demoUrl}"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="w-full sm:w-auto text-center flex items-center justify-center gap-1.5 text-body-sm bg-accent text-white px-5 py-2.5 rounded hover:bg-blue-700 transition-colors font-semibold"
-              >
-                <span>Open Demo</span>
-                <span>↗</span>
-              </a>
-            ` : ''}
             ${project.githubUrl ? `
               <a
                 href="${project.githubUrl}"
@@ -668,10 +677,24 @@ const projectsJSON = JSON.stringify(projects);
     closeBtn.addEventListener('click', closeModal);
     backdropEl.addEventListener('click', closeModal);
 
-    // Keyboard support (Escape key closes modal)
+    // Keyboard support (Escape key closes modal, Arrow keys navigate carousel)
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && isModalOpen) {
+      if (!isModalOpen) return;
+      
+      if (e.key === 'Escape') {
         closeModal();
+      } else if (e.key === 'ArrowRight') {
+        const nextBtn = document.getElementById('modal-carousel-next');
+        if (nextBtn) {
+          e.preventDefault();
+          nextBtn.click();
+        }
+      } else if (e.key === 'ArrowLeft') {
+        const prevBtn = document.getElementById('modal-carousel-prev');
+        if (prevBtn) {
+          e.preventDefault();
+          prevBtn.click();
+        }
       }
     });
 
@@ -691,3 +714,19 @@ const projectsJSON = JSON.stringify(projects);
     });
   });
 </script>
+
+<style>
+  @keyframes pulse-glow {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+    }
+    50% {
+      transform: scale(1.04);
+      box-shadow: 0 0 14px 4px rgba(59, 130, 246, 0.45);
+    }
+  }
+  .animate-pulse-glow {
+    animation: pulse-glow 2s infinite ease-in-out;
+  }
+</style>
