@@ -674,5 +674,20 @@ const projectsJSON = JSON.stringify(projects);
         closeModal();
       }
     });
+
+    // Listen for presentation horizontal next/prev events
+    window.addEventListener('slide-next-content', (e: any) => {
+      if (e.detail.sectionId === 'projects') {
+        const nextIndex = (currentIndex + 1) % cards.length;
+        scrollToCard(nextIndex);
+      }
+    });
+
+    window.addEventListener('slide-prev-content', (e: any) => {
+      if (e.detail.sectionId === 'projects') {
+        const prevIndex = (currentIndex - 1 + cards.length) % cards.length;
+        scrollToCard(prevIndex);
+      }
+    });
   });
 </script>

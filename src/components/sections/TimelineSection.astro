@@ -119,7 +119,8 @@ import { Calendar } from '@lucide/astro';
             Every stage of my career has taught me a different way to solve problems. Instead of changing industries, I have continuously expanded the way I create value.
           </p>
           <div class="flex items-center gap-2.5 text-xs text-text-muted font-bold tracking-wider uppercase">
-            <span>Scroll vertically to step through</span>
+            <span class="normal-scroll-hint">Scroll vertically to step through</span>
+            <span class="slide-scroll-hint hidden">Use Left/Right arrows to step through</span>
             <span class="animate-bounce">→</span>
           </div>
         </div>
@@ -191,7 +192,8 @@ import { Calendar } from '@lucide/astro';
               </div>
               
               <div class="flex items-center gap-2 mt-4 text-[10px] text-text-muted font-bold tracking-wider uppercase">
-                <span>Scroll to step through</span>
+                <span class="normal-scroll-hint">Scroll to step through</span>
+                <span class="slide-scroll-hint hidden">Use Left/Right arrows</span>
                 <span class="animate-pulse">→</span>
               </div>
             </div>
@@ -267,3 +269,13 @@ import { Calendar } from '@lucide/astro';
     }
   });
 </script>
+
+<style>
+  /* Toggle scroll hints in timeline based on presentation mode */
+  :global(html.presentation-active) .normal-scroll-hint {
+    display: none !important;
+  }
+  :global(html.presentation-active) .slide-scroll-hint {
+    display: inline !important;
+  }
+</style>

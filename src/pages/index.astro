@@ -329,47 +329,49 @@ import ContactSection from '../components/sections/ContactSection.astro';
         }
       };
 
+      const handleNextContent = () => {
+        const activeSection = sections[currentSlide];
+        if (!activeSection) return;
+
+        if (activeSection.id === 'journey') {
+          const track = document.getElementById('timeline-scroll-track');
+          const cardsCount = track ? track.children.length : 0;
+          if (currentTimelineStep < cardsCount - 1) {
+            currentTimelineStep++;
+            updateTimelineStepState();
+          }
+        } else {
+          // Dispatch custom event for other sections to handle horizontal transition
+          window.dispatchEvent(new CustomEvent('slide-next-content', { detail: { sectionId: activeSection.id } }));
+        }
+      };
+
+      const handlePrevContent = () => {
+        const activeSection = sections[currentSlide];
+        if (!activeSection) return;
+
+        if (activeSection.id === 'journey') {
+          if (currentTimelineStep > 0) {
+            currentTimelineStep--;
+            updateTimelineStepState();
+          }
+        } else {
+          // Dispatch custom event for other sections to handle horizontal transition
+          window.dispatchEvent(new CustomEvent('slide-prev-content', { detail: { sectionId: activeSection.id } }));
+        }
+      };
+
       const goToSlide = (index: number) => {
         if (index < 0 || index >= sections.length) return;
         
-        const activeSection = sections[currentSlide];
         const targetSection = sections[index];
-        
-        // Handle sub-stepping for journey section
-        if (activeSection && activeSection.id === 'journey') {
-          const track = document.getElementById('timeline-scroll-track');
-          const cardsCount = track ? track.children.length : 0;
-          
-          if (cardsCount > 0) {
-            // If moving next (index > currentSlide)
-            if (index > currentSlide && currentTimelineStep < cardsCount - 1) {
-              currentTimelineStep++;
-              updateTimelineStepState();
-              return;
-            }
-            // If moving prev (index < currentSlide)
-            if (index < currentSlide && currentTimelineStep > 0) {
-              currentTimelineStep--;
-              updateTimelineStepState();
-              return;
-            }
-          }
-        }
         
         // Change slide index
         currentSlide = index;
         
         // Reset sub-steps when entering journey slide
         if (targetSection && targetSection.id === 'journey') {
-          const track = document.getElementById('timeline-scroll-track');
-          const cardsCount = track ? track.children.length : 0;
-          if (index > currentSlide - 1) {
-            // Coming from top (Hero/About) -> start at step 0
-            currentTimelineStep = 0;
-          } else {
-            // Coming from bottom (Expertise) -> start at last step
-            currentTimelineStep = cardsCount > 0 ? cardsCount - 1 : 0;
-          }
+          currentTimelineStep = 0;
         }
         
         updateSlideState();
@@ -395,12 +397,33 @@ import ContactSection from '../components/sections/ContactSection.astro';
       document.addEventListener('keydown', (e) => {
         if (!document.documentElement.classList.contains('presentation-active')) return;
         
-        if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+        const activeSection = sections[currentSlide];
+        const isHorizontalSection = activeSection && (
+          activeSection.id === 'journey' || 
+          activeSection.id === 'projects' || 
+          activeSection.id === 'certificates'
+        );
+
+        if (e.key === 'ArrowDown' || e.key === ' ') {
           e.preventDefault();
           goToSlide(currentSlide + 1);
-        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        } else if (e.key === 'ArrowUp') {
           e.preventDefault();
           goToSlide(currentSlide - 1);
+        } else if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          if (isHorizontalSection) {
+            handleNextContent();
+          } else {
+            goToSlide(currentSlide + 1);
+          }
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          if (isHorizontalSection) {
+            handlePrevContent();
+          } else {
+            goToSlide(currentSlide - 1);
+          }
         } else if (e.key === 'Escape') {
           e.preventDefault();
           stopPresentation();

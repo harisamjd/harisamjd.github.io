@@ -592,6 +592,21 @@ const certificatesJSON = JSON.stringify(certificates);
         certScrollDebounce = window.setTimeout(updateCertsActiveState, 50);
       });
 
+      // Listen for presentation horizontal next/prev events
+      window.addEventListener('slide-next-content', (e: any) => {
+        if (e.detail.sectionId === 'certificates') {
+          const nextIndex = (currentCertIndex + 1) % certCardsList.length;
+          scrollToCert(nextIndex);
+        }
+      });
+
+      window.addEventListener('slide-prev-content', (e: any) => {
+        if (e.detail.sectionId === 'certificates') {
+          const prevIndex = (currentCertIndex - 1 + certCardsList.length) % certCardsList.length;
+          scrollToCert(prevIndex);
+        }
+      });
+
       // Initialize
       updateCertsActiveState();
       startAutoScroll();
