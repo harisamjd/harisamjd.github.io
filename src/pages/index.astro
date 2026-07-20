@@ -194,6 +194,15 @@ import ContactSection from '../components/sections/ContactSection.astro';
       transform: translateY(-100%) !important;
       pointer-events: none !important;
     }
+
+    /* Vertically center content for short sections in slide mode */
+    html.presentation-active #download-cv,
+    html.presentation-active #contact {
+      display: flex !important;
+      flex-direction: column !important;
+      justify-content: center !important;
+      align-items: center !important;
+    }
   </style>
 
   <script>
@@ -267,6 +276,13 @@ import ContactSection from '../components/sections/ContactSection.astro';
       };
 
       const startPresentation = () => {
+        // Request browser fullscreen mode
+        if (document.documentElement.requestFullscreen) {
+          document.documentElement.requestFullscreen().catch((err) => {
+            console.log("Fullscreen request failed:", err);
+          });
+        }
+
         // Disable ScrollTriggers to revert pin spacers and restore DOM hierarchy
         ScrollTrigger.getAll().forEach((t) => t.disable(true));
 
@@ -281,6 +297,13 @@ import ContactSection from '../components/sections/ContactSection.astro';
       };
 
       const stopPresentation = () => {
+        // Exit browser fullscreen mode if active
+        if (document.fullscreenElement) {
+          document.exitFullscreen().catch((err) => {
+            console.log("Exit fullscreen failed:", err);
+          });
+        }
+
         document.documentElement.classList.remove('presentation-active');
         if (dock) {
           dock.classList.add('hidden');
@@ -399,6 +422,13 @@ import ContactSection from '../components/sections/ContactSection.astro';
           isScrolling = false;
         }, 700); // Debounce duration matching CSS transition
       }, { passive: false });
+
+      // Handle browser fullscreen exit (e.g. pressing ESC or browser UI buttons)
+      document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement && document.documentElement.classList.contains('presentation-active')) {
+          stopPresentation();
+        }
+      });
     });
   </script>
 
