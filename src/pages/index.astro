@@ -172,6 +172,17 @@ import ContactSection from '../components/sections/ContactSection.astro';
       box-sizing: border-box !important;
       opacity: 1 !important;
       transform: none !important;
+      
+      /* Make section a flex container to allow auto margins on child wrapper */
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+    /* Automatically and safely center the inner wrapper div of each section vertically */
+    html.presentation-active #presentation-wrapper > section > div {
+      margin-top: auto !important;
+      margin-bottom: auto !important;
+      width: 100% !important;
     }
 
     /* Hide scrollbars in slide mode for sections to make presentation immersive */
@@ -193,15 +204,6 @@ import ContactSection from '../components/sections/ContactSection.astro';
     html.presentation-active #main-header {
       transform: translateY(-100%) !important;
       pointer-events: none !important;
-    }
-
-    /* Vertically center content for short sections in slide mode */
-    html.presentation-active #download-cv,
-    html.presentation-active #contact {
-      display: flex !important;
-      flex-direction: column !important;
-      justify-content: center !important;
-      align-items: center !important;
     }
   </style>
 
