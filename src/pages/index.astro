@@ -197,6 +197,10 @@ import ContactSection from '../components/sections/ContactSection.astro';
   </style>
 
   <script>
+    import gsap from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    gsap.registerPlugin(ScrollTrigger);
+
     window.addEventListener('DOMContentLoaded', () => {
       const toggleBtn = document.getElementById('presentation-toggle');
       const dock = document.getElementById('presentation-dock');
@@ -211,7 +215,33 @@ import ContactSection from '../components/sections/ContactSection.astro';
       if (sections.length === 0) return;
 
       let currentSlide = 0;
+      let currentTimelineStep = 0;
       let isScrolling = false;
+
+      const updateTimelineStepState = () => {
+        const track = document.getElementById('timeline-scroll-track');
+        if (!track) return;
+        const cards = track.children;
+        if (cards.length === 0) return;
+
+        // Clamp values
+        if (currentTimelineStep < 0) currentTimelineStep = 0;
+        if (currentTimelineStep >= cards.length) currentTimelineStep = cards.length - 1;
+
+        // Calculate horizontal offset to center card in viewport
+        const activeCard = cards[currentTimelineStep] as HTMLElement;
+        const cardOffset = activeCard.offsetLeft;
+        const cardWidth = activeCard.clientWidth;
+        const targetX = -(cardOffset - (window.innerWidth - cardWidth) / 2);
+
+        track.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
+        track.style.transform = `translateX(${targetX}px)`;
+
+        // Update indicator with step notation e.g., "3.1 / 9" for step 1 of section 3
+        if (indicator) {
+          indicator.textContent = `${currentSlide + 1}.${currentTimelineStep + 1} / ${sections.length}`;
+        }
+      };
 
       const updateSlideState = () => {
         if (!wrapper || !indicator || !prevBtn || !nextBtn) return;
@@ -219,21 +249,34 @@ import ContactSection from '../components/sections/ContactSection.astro';
         // Translate the wrapper
         wrapper.style.transform = `translateY(-${currentSlide * 100}vh)`;
         
-        // Update indicator
-        indicator.textContent = `${currentSlide + 1} / ${sections.length}`;
+        const activeSection = sections[currentSlide];
+        if (activeSection && activeSection.id === 'journey') {
+          updateTimelineStepState();
+        } else {
+          indicator.textContent = `${currentSlide + 1} / ${sections.length}`;
+        }
         
         // Update button states
-        prevBtn.disabled = currentSlide === 0;
-        nextBtn.disabled = currentSlide === sections.length - 1;
+        const activeSectionCheck = sections[currentSlide];
+        const isJourney = activeSectionCheck && activeSectionCheck.id === 'journey';
+        const track = document.getElementById('timeline-scroll-track');
+        const cardsCount = track ? track.children.length : 0;
+        
+        prevBtn.disabled = currentSlide === 0 && (!isJourney || currentTimelineStep === 0);
+        nextBtn.disabled = currentSlide === sections.length - 1 && (!isJourney || currentTimelineStep === cardsCount - 1);
       };
 
       const startPresentation = () => {
+        // Disable ScrollTriggers to revert pin spacers and restore DOM hierarchy
+        ScrollTrigger.getAll().forEach((t) => t.disable(true));
+
         document.documentElement.classList.add('presentation-active');
         if (dock) {
           dock.classList.remove('hidden');
           dock.classList.add('flex');
         }
         currentSlide = 0;
+        currentTimelineStep = 0;
         updateSlideState();
       };
 
@@ -246,6 +289,15 @@ import ContactSection from '../components/sections/ContactSection.astro';
         if (wrapper) {
           wrapper.style.transform = '';
         }
+        const track = document.getElementById('timeline-scroll-track');
+        if (track) {
+          track.style.transform = '';
+          track.style.transition = '';
+        }
+        
+        // Re-enable ScrollTriggers to restore normal scroll animations
+        ScrollTrigger.getAll().forEach((t) => t.enable());
+
         // Scroll back to the active section naturally
         if (sections[currentSlide]) {
           sections[currentSlide].scrollIntoView({ behavior: 'auto' });
@@ -254,7 +306,47 @@ import ContactSection from '../components/sections/ContactSection.astro';
 
       const goToSlide = (index: number) => {
         if (index < 0 || index >= sections.length) return;
+        
+        const activeSection = sections[currentSlide];
+        const targetSection = sections[index];
+        
+        // Handle sub-stepping for journey section
+        if (activeSection && activeSection.id === 'journey') {
+          const track = document.getElementById('timeline-scroll-track');
+          const cardsCount = track ? track.children.length : 0;
+          
+          if (cardsCount > 0) {
+            // If moving next (index > currentSlide)
+            if (index > currentSlide && currentTimelineStep < cardsCount - 1) {
+              currentTimelineStep++;
+              updateTimelineStepState();
+              return;
+            }
+            // If moving prev (index < currentSlide)
+            if (index < currentSlide && currentTimelineStep > 0) {
+              currentTimelineStep--;
+              updateTimelineStepState();
+              return;
+            }
+          }
+        }
+        
+        // Change slide index
         currentSlide = index;
+        
+        // Reset sub-steps when entering journey slide
+        if (targetSection && targetSection.id === 'journey') {
+          const track = document.getElementById('timeline-scroll-track');
+          const cardsCount = track ? track.children.length : 0;
+          if (index > currentSlide - 1) {
+            // Coming from top (Hero/About) -> start at step 0
+            currentTimelineStep = 0;
+          } else {
+            // Coming from bottom (Expertise) -> start at last step
+            currentTimelineStep = cardsCount > 0 ? cardsCount - 1 : 0;
+          }
+        }
+        
         updateSlideState();
       };
 

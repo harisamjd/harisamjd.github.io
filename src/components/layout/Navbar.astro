@@ -64,7 +64,7 @@ const navItems = [
   <!-- Mobile Drawer Menu -->
   <div
     id="mobile-menu"
-    class="fixed inset-y-0 right-0 w-full sm:w-[320px] bg-card-bg border-l border-divider z-40 transform translate-x-full transition-transform duration-300 md:hidden flex flex-col pt-24 px-6 gap-6 shadow-lg"
+    class="fixed inset-y-0 right-0 w-full sm:w-[320px] bg-bg border-l border-divider z-40 transform translate-x-full transition-transform duration-300 md:hidden flex flex-col pt-24 px-6 gap-6 shadow-lg"
     role="dialog"
     aria-modal="true"
     aria-label="Mobile Navigation"
@@ -119,6 +119,7 @@ const navItems = [
     showIcon?.classList.toggle('hidden');
     hideIcon?.classList.toggle('hidden');
     document.body.classList.toggle('overflow-hidden');
+    header?.classList.toggle('mobile-menu-open');
   }
  
   toggleBtn?.addEventListener('click', toggleMobileMenu);
@@ -170,3 +171,15 @@ const navItems = [
   window.addEventListener('scroll', scrollSpy);
   scrollSpy(); // Initialize spy
 </script>
+
+<style>
+  #main-header.mobile-menu-open {
+    background-color: var(--color-bg) !important;
+    backdrop-filter: none !important;
+    border-bottom: 1px solid var(--color-divider) !important;
+  }
+  
+  #mobile-menu {
+    background-color: var(--color-bg) !important;
+  }
+</style>
