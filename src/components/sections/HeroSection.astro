@@ -1,26 +1,29 @@
 ---
 import { ArrowDown } from '@lucide/astro';
 import { personalInfo } from '../../content/data/personal';
-import { getImage } from 'astro:assets';
+import { Image } from 'astro:assets';
 // Import FAZZA-3339.jpg for the background image
 import heroBgImage from '../../assets/picts/FAZZA-3339.jpg';
-
-// Optimize the background image using Astro's image service
-const optimizedHeroBg = await getImage({ src: heroBgImage, format: 'webp', width: 1920, quality: 80 });
 ---
 
 <section
   id="hero"
-  class="relative min-h-screen flex flex-col justify-center items-center px-6 overflow-hidden bg-cover bg-center bg-no-repeat"
-  style={`background-image: url(${optimizedHeroBg.src});`}
+  class="relative min-h-[calc(100vh-72px)] flex flex-col justify-center items-center px-6 overflow-hidden"
   aria-label="Welcome and Introduction"
 >
-  <!-- Dark vignette overlays to ensure perfect contrast and text readability -->
-  <div class="absolute inset-0 bg-bg/75 backdrop-blur-[2px] z-0"></div>
-  <div class="absolute inset-0 bg-gradient-to-b from-bg/90 via-transparent to-bg z-0"></div>
+  <!-- Hardware-accelerated background image -->
+  <Image
+    src={heroBgImage}
+    alt="Hero Background"
+    class="absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none z-0"
+    width={1920}
+    quality={80}
+    loading="eager"
+  />
 
-  <!-- Grid Mesh Ornament -->
-  <div class="absolute inset-0 bg-grid-mesh opacity-15 pointer-events-none select-none z-0"></div>
+  <!-- Dark vignette overlays to ensure perfect contrast and text readability -->
+  <div class="absolute inset-0 bg-bg/85 z-0"></div>
+  <div class="absolute inset-0 bg-gradient-to-b from-bg/90 via-transparent to-bg z-0"></div>
 
   <!-- Decorative R&D Process Flowchart Blueprint SVG -->
   <div class="absolute right-10 top-1/2 -translate-y-1/2 w-[540px] h-[540px] hidden lg:block opacity-[0.25] z-0 select-none pointer-events-none">
@@ -210,7 +213,13 @@ const optimizedHeroBg = await getImage({ src: heroBgImage, format: 'webp', width
     // Attach click handler to scroll indicator to navigate smoothly
     scrollIndicator?.addEventListener('click', () => {
       const aboutSection = document.getElementById('about');
-      aboutSection?.scrollIntoView({ behavior: 'smooth' });
+      if (aboutSection) {
+        if ((window as any).lenis) {
+          (window as any).lenis.scrollTo(aboutSection);
+        } else {
+          aboutSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
     });
 
     // Synchronize starting the hero timeline after the intro curtain has completely slid up

@@ -14,7 +14,7 @@ const {
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -79,7 +79,7 @@ const {
     <!-- Long Laboratory Liquid Column (Thematic R&D scroll progress cylinder, aligned perfectly with the card) -->
     <div
       id="scroll-liquid-column"
-      class="fixed right-[30px] top-24 bottom-24 w-3.5 rounded-full border border-divider/60 bg-bg/40 z-30 overflow-hidden shadow-inner backdrop-blur-sm pointer-events-none hidden md:block opacity-0 transition-opacity duration-500"
+      class="fixed right-[30px] top-24 bottom-24 w-3.5 rounded-full border border-divider/60 bg-card-bg/80 z-30 overflow-hidden shadow-inner pointer-events-none hidden md:block opacity-0 transition-opacity duration-500"
     >
       <!-- Liquid Level Fill (Fills top-to-bottom as progress increases) -->
       <div
@@ -102,7 +102,7 @@ const {
     <!-- Floating Circular Scroll Progress Indicator (Moves dynamically along the column) -->
     <div
       id="scroll-progress-container"
-      class="fixed right-[13px] z-40 hidden md:flex flex-col items-center select-none pointer-events-none opacity-0 transition-opacity duration-500 cursor-pointer"
+      class="fixed right-[13px] top-0 z-40 hidden md:flex flex-col items-center select-none pointer-events-none opacity-0 transition-opacity duration-500 cursor-pointer"
       role="button"
       aria-label="Scroll to top"
     >
@@ -139,6 +139,9 @@ const {
     <script>
       import Lenis from 'lenis';
       import gsap from 'gsap';
+      import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+      gsap.registerPlugin(ScrollTrigger);
 
       // Check if user prefers reduced motion
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -193,10 +196,13 @@ const {
       // Handle Lenis scroll
       if (!prefersReducedMotion) {
         const lenis = new Lenis({
-          duration: 1.2,
+          duration: 1.0,
           smoothWheel: true,
           syncTouch: false,
         });
+
+        // Synchronize Lenis scroll updates with GSAP ScrollTrigger
+        lenis.on('scroll', ScrollTrigger.update);
 
         function raf(time: number) {
           lenis.raf(time);
@@ -242,7 +248,7 @@ const {
           const availableHeight = window.innerHeight - topOffset - bottomOffset - cardHeight;
           const cardTop = topOffset + (scrollPercent / 100) * availableHeight;
 
-          progressContainer.style.top = cardTop + 'px';
+          progressContainer.style.transform = `translate3d(0, ${cardTop}px, 0)`;
 
           // Show indicator only after scrolling down slightly (e.g. 100px)
           const liquidColumn = document.getElementById('scroll-liquid-column');
@@ -265,7 +271,11 @@ const {
           }
         };
 
-        window.addEventListener('scroll', updateScrollProgress);
+        if ((window as any).lenis) {
+          (window as any).lenis.on('scroll', updateScrollProgress);
+        } else {
+          window.addEventListener('scroll', updateScrollProgress);
+        }
         updateScrollProgress(); // Initial run
 
         // Click to scroll to top
