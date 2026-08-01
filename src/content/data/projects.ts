@@ -154,7 +154,7 @@ export const projects: Project[] = [
     ],
     techStack: ["Next.js", "TypeScript", "Supabase", "Tailwind CSS", "Google Gemini AI", "TradingView API"],
     softSkills: ["Data Analytics", "Data Visualization", "Capital Market Analysis", "Quantitative Analysis"],
-    demoUrl: "https://gedanggoreng.netlify.app",
+    demoUrl: "https://ihsg-stock-deck.vercel.app",
     images: [
       "/images/projects/gedanggoreng/1.png",
       "/images/projects/gedanggoreng/2.png",

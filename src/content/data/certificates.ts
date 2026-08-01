@@ -85,24 +85,6 @@ export const certificates: Certificate[] = [
     ]
   },
   {
-    id: "dqlab-python",
-    title: "Python (Basic) Certificate",
-    issuer: "DQLab",
-    issueDate: "2023",
-    url: "/docs/3.0 Certification - Basic Python.pdf",
-    type: "Certification",
-    logoKey: "dqlab"
-  },
-  {
-    id: "shelf-life-determination",
-    title: "Sertifikasi Penentuan Shelf Life Produk Pangan",
-    issuer: "Anugerah Global Superintending (Saraswanti)",
-    issueDate: "2026",
-    url: "/docs/4. Certification - Penentuan Shelf Life.pdf",
-    type: "Certification",
-    logoKey: "ags"
-  },
-  {
     id: "cawd-ai-web-developer",
     title: "Certified AI Web Developer (CAWD)",
     issuer: "Vibecoding.id",
@@ -123,13 +105,22 @@ export const certificates: Certificate[] = [
     credentialUrl: "https://credsverse.com/credentials/8a427175-0a97-4b96-9e26-a4ca616a791a"
   },
   {
-    id: "supervisory-leadership",
-    title: "Supervisory Leadership Training",
-    issuer: "PQM",
-    issueDate: "2022",
-    url: "/docs/9. Training - Supervisory Leadership.pdf",
-    type: "Training",
-    logoKey: "pqm"
+    id: "dqlab-python",
+    title: "Python (Basic) Certificate",
+    issuer: "DQLab",
+    issueDate: "2023",
+    url: "/docs/3.0 Certification - Basic Python.pdf",
+    type: "Certification",
+    logoKey: "dqlab"
+  },
+  {
+    id: "shelf-life-determination",
+    title: "Sertifikasi Penentuan Shelf Life Produk Pangan",
+    issuer: "Anugerah Global Superintending (Saraswanti)",
+    issueDate: "2026",
+    url: "/docs/4. Certification - Penentuan Shelf Life.pdf",
+    type: "Certification",
+    logoKey: "ags"
   },
   {
     id: "lean-six-sigma-course",
@@ -139,6 +130,15 @@ export const certificates: Certificate[] = [
     url: "/docs/8. Training - Lean & Six Sigma Course.pdf",
     type: "Training",
     logoKey: "bsi"
+  },
+  {
+    id: "supervisory-leadership",
+    title: "Supervisory Leadership Training",
+    issuer: "PQM",
+    issueDate: "2022",
+    url: "/docs/9. Training - Supervisory Leadership.pdf",
+    type: "Training",
+    logoKey: "pqm"
   },
   {
     id: "smart-presentation-skill",

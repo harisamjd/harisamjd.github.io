@@ -41,7 +41,7 @@ export const careerTimeline: TimelineItem[] = [
   {
     id: "food-tech",
     period: "Background",
-    role: "Food Tech Engineer",
+    role: "Food Tech Bachelor",
     company: "R&D Foundations",
     description: "Gained a strong foundation in adopting data & technology in food manufacture. Solved manufacturing process challenges using structured experiments, root cause analysis (RCA), and continuous improvement methods."
   },
@@ -62,7 +62,7 @@ export const careerTimeline: TimelineItem[] = [
   {
     id: "digital-trans",
     period: "Expansion Technical Skills",
-    role: "Systems & Digital Transformation Lead",
+    role: "Digitalization & Data Proficient",
     company: "Operations & Technology",
     description: "Began transitioning workflows from physical to digital. Automated manual tracking spreadsheets with customized databases, dynamic entry apps, and live operational dashboards."
   },
