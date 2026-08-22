@@ -447,17 +447,30 @@ const projectsJSON = JSON.stringify(projects);
               `).join('')}
             </div>
           </div>
-          ${project.demoUrl ? `
-            <div class="shrink-0 w-full sm:w-auto">
-              <a
-                href="${project.demoUrl}"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-body-sm bg-accent text-white px-5 py-2.5 rounded hover:bg-blue-600 transition-colors font-bold shadow-lg animate-pulse-glow"
-              >
-                <span>Try the App</span>
-                <span>↗</span>
-              </a>
+          ${(project.demoUrl || project.docsUrl) ? `
+            <div class="flex flex-col sm:flex-row gap-3 shrink-0 w-full sm:w-auto">
+              ${project.demoUrl ? `
+                <a
+                  href="${project.demoUrl}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-body-sm bg-accent text-white px-5 py-2.5 rounded hover:bg-blue-600 transition-colors font-bold shadow-lg animate-pulse-glow"
+                >
+                  <span>Try the App</span>
+                  <span>↗</span>
+                </a>
+              ` : ''}
+              ${project.docsUrl ? `
+                <a
+                  href="${project.docsUrl}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-body-sm bg-surface border border-divider text-text-primary px-5 py-2.5 rounded hover:bg-divider transition-colors font-bold shadow-lg"
+                >
+                  <span>Read Documentation</span>
+                  <span>↗</span>
+                </a>
+              ` : ''}
             </div>
           ` : ''}
         </div>

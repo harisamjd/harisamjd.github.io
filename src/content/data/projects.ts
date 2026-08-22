@@ -11,6 +11,7 @@ export interface Project {
   softSkills?: string[];
   demoUrl?: string;
   githubUrl?: string;
+  docsUrl?: string;
   images?: string[];
   status?: string;
 }
@@ -32,6 +33,7 @@ export const projects: Project[] = [
     ],
     techStack: ["React", "Next.js", "SharePoint Integration"],
     softSkills: ["Requirements Gathering", "Stakeholder Management", "Cross-Functional Collaboration"],
+    docsUrl: "/docs/Porto/PD - RnD Sample Tracing.pdf",
     images: [
       "/images/projects/sample-tracing/1-cover.png",
       "/images/projects/sample-tracing/2-dasboard.png",
@@ -102,6 +104,7 @@ export const projects: Project[] = [
     ],
     techStack: ["React", "Node.js", "Express", "PostgreSQL", "Tailwind CSS", "Chart.js"],
     softSkills: ["System Architecture", "Product Management", "Problem Solving"],
+    docsUrl: "/docs/Porto/PD - Takemura POS.pdf",
     images: [
       "/images/projects/pos/1-cover.png",
       "/images/projects/pos/2-dashboard.png",
@@ -128,6 +131,7 @@ export const projects: Project[] = [
     ],
     techStack: ["Next.js", "Tailwind CSS", "JavaScript", "GSAP"],
     softSkills: ["UI/UX Prototyping", "Personal Finance Planning", "Self-Directed Learning"],
+    docsUrl: "/docs/Porto/PD - Cashflow.pdf",
     images: [
       "/images/projects/household-cashflow/1-cover.png",
       "/images/projects/household-cashflow/2-dashboard.png",
@@ -162,14 +166,15 @@ export const projects: Project[] = [
       "/images/projects/gedanggoreng/4.png",
       "/images/projects/gedanggoreng/5.png",
       "/images/projects/gedanggoreng/6.png",
-      "/images/projects/gedanggoreng/7.png"
+      "/images/projects/gedanggoreng/7.png",
+      "/images/projects/gedanggoreng/8.png",
+      "/images/projects/gedanggoreng/9.png"
     ]
   },
   {
     id: "trial-management-system",
     title: "Trial Management System",
     category: "R&D Digital Transformation",
-    status: "ON GOING",
     role: ["Business Analyst", "Full Stack Developer"],
     problem: "R&D pilot trial scheduling, data logging, and scale-up tracking were managed via scattered documents and lacked a unified data repository.",
     challenge: "Capturing highly variable process parameters from laboratory trials through to commercial manufacturing runs without complicating the R&D workflow.",
@@ -180,7 +185,16 @@ export const projects: Project[] = [
       "Standardized data handoff to manufacturing teams."
     ],
     techStack: ["Next.js"],
-    softSkills: ["Project Scheduling", "R&D Process Improvement", "Agile Planning"]
+    softSkills: ["Project Scheduling", "R&D Process Improvement", "Agile Planning"],
+    docsUrl: "/docs/Porto/TrialManagementSystem",
+    images: [
+      "/images/projects/trial-management-system/1.png",
+      "/images/projects/trial-management-system/2.png",
+      "/images/projects/trial-management-system/3.png",
+      "/images/projects/trial-management-system/4.png",
+      "/images/projects/trial-management-system/5.png",
+      "/images/projects/trial-management-system/6.png"
+    ]
   },
   {
     id: "neighborhood-internet-network",
