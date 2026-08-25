@@ -129,7 +129,7 @@ const {
             style="transition: stroke-dashoffset 0.1s ease-out;"
           />
         </svg>
-        <span id="scroll-progress-text" class="text-[10px] font-mono font-semibold text-text-primary">
+        <span id="scroll-progress-text" class="text-caption font-mono font-semibold text-text-primary">
           0%
         </span>
       </div>
@@ -224,50 +224,58 @@ const {
 
         const circumference = 125.66; // 2 * Math.PI * 20
 
+        let ticking = false;
+
         const updateScrollProgress = () => {
-          const scrollTop = window.scrollY;
-          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-          const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+          if (!ticking) {
+            window.requestAnimationFrame(() => {
+              const scrollTop = window.scrollY;
+              const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+              const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
 
-          // Update text percentage
-          progressText.textContent = Math.round(scrollPercent) + '%';
+              // Update text percentage
+              progressText.textContent = Math.round(scrollPercent) + '%';
 
-          // Update stroke dashoffset
-          const offset = circumference - (scrollPercent / 100) * circumference;
-          progressCircle.setAttribute('stroke-dashoffset', offset.toString());
+              // Update stroke dashoffset
+              const offset = circumference - (scrollPercent / 100) * circumference;
+              progressCircle.setAttribute('stroke-dashoffset', offset.toString());
 
-          // Update liquid tube fill height (flowing top-to-bottom)
-          if (liquidFill) {
-            liquidFill.style.height = scrollPercent + '%';
-          }
+              // Update liquid tube fill height (flowing top-to-bottom)
+              if (liquidFill) {
+                liquidFill.style.height = scrollPercent + '%';
+              }
 
-          // Calculate dynamic vertical position for the card (floating at the bottom tip of the liquid)
-          const topOffset = 96; // matches top-24 (96px)
-          const bottomOffset = 96; // matches bottom-24 (96px)
-          const cardHeight = 48; // matches w-12 h-12 (48px)
-          const availableHeight = window.innerHeight - topOffset - bottomOffset - cardHeight;
-          const cardTop = topOffset + (scrollPercent / 100) * availableHeight;
+              // Calculate dynamic vertical position for the card (floating at the bottom tip of the liquid)
+              const topOffset = 96; // matches top-24 (96px)
+              const bottomOffset = 96; // matches bottom-24 (96px)
+              const cardHeight = 48; // matches w-12 h-12 (48px)
+              const availableHeight = window.innerHeight - topOffset - bottomOffset - cardHeight;
+              const cardTop = topOffset + (scrollPercent / 100) * availableHeight;
 
-          progressContainer.style.transform = `translate3d(0, ${cardTop}px, 0)`;
+              progressContainer.style.transform = `translate3d(0, ${cardTop}px, 0)`;
 
-          // Show indicator only after scrolling down slightly (e.g. 100px)
-          const liquidColumn = document.getElementById('scroll-liquid-column');
-          if (scrollTop > 100) {
-            progressContainer.classList.remove('opacity-0', 'pointer-events-none');
-            progressContainer.classList.add('opacity-100');
-            
-            if (liquidColumn) {
-              liquidColumn.classList.remove('opacity-0', 'pointer-events-none');
-              liquidColumn.classList.add('opacity-100');
-            }
-          } else {
-            progressContainer.classList.remove('opacity-100');
-            progressContainer.classList.add('opacity-0', 'pointer-events-none');
-            
-            if (liquidColumn) {
-              liquidColumn.classList.remove('opacity-100');
-              liquidColumn.classList.add('opacity-0', 'pointer-events-none');
-            }
+              // Show indicator only after scrolling down slightly (e.g. 100px)
+              const liquidColumn = document.getElementById('scroll-liquid-column');
+              if (scrollTop > 100) {
+                progressContainer.classList.remove('opacity-0', 'pointer-events-none');
+                progressContainer.classList.add('opacity-100');
+                
+                if (liquidColumn) {
+                  liquidColumn.classList.remove('opacity-0', 'pointer-events-none');
+                  liquidColumn.classList.add('opacity-100');
+                }
+              } else {
+                progressContainer.classList.remove('opacity-100');
+                progressContainer.classList.add('opacity-0', 'pointer-events-none');
+                
+                if (liquidColumn) {
+                  liquidColumn.classList.remove('opacity-100');
+                  liquidColumn.classList.add('opacity-0', 'pointer-events-none');
+                }
+              }
+              ticking = false;
+            });
+            ticking = true;
           }
         };
 

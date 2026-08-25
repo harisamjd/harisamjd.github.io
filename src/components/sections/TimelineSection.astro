@@ -52,7 +52,7 @@ import { Calendar } from '@lucide/astro';
               <div class="flex flex-col gap-4 border-l-2 border-dashed border-accent/20 pl-4 py-2 mt-1">
                 {item.branches.map((branch) => (
                   <div class="bg-surface/60 border border-divider p-4 rounded-lg relative hover:border-accent/35 transition-all">
-                    <span class="inline-block text-[9px] tracking-wider font-bold uppercase px-2 py-0.5 bg-accent/10 border border-accent/20 text-accent rounded mb-2">
+                    <span class="inline-block text-caption tracking-wider font-bold uppercase px-2 py-0.5 bg-accent/10 border border-accent/20 text-accent rounded mb-2">
                       {branch.badge}
                     </span>
                     <h4 class="text-body-sm font-semibold text-text-primary">
@@ -146,17 +146,17 @@ import { Calendar } from '@lucide/astro';
                     {item.branches.map((branch) => (
                       <div class="bg-surface/50 border border-divider hover:border-accent/20 p-4 rounded-xl flex flex-col justify-between min-h-[240px] transition-all">
                         <div>
-                          <span class="inline-block text-[9px] tracking-wider font-bold uppercase px-2 py-0.5 bg-accent/10 border border-accent/20 text-accent rounded mb-2">
+                          <span class="inline-block text-caption tracking-wider font-bold uppercase px-2 py-0.5 bg-accent/10 border border-accent/20 text-accent rounded mb-2">
                             {branch.badge}
                           </span>
                           <h4 class="text-caption font-semibold leading-tight text-text-primary">
                             {branch.role}
                           </h4>
-                          <span class="text-[11px] font-medium text-text-secondary block mt-0.5">
+                          <span class="text-caption font-medium text-text-secondary block mt-0.5">
                             {branch.company}
                           </span>
                         </div>
-                        <p class="text-[11px] text-text-muted mt-3 leading-relaxed">
+                        <p class="text-caption text-text-muted mt-3 leading-relaxed">
                           {branch.description}
                         </p>
                       </div>
@@ -191,7 +191,7 @@ import { Calendar } from '@lucide/astro';
                 </p>
               </div>
               
-              <div class="flex items-center gap-2 mt-4 text-[10px] text-text-muted font-bold tracking-wider uppercase">
+              <div class="flex items-center gap-2 mt-4 text-caption text-text-muted font-bold tracking-wider uppercase">
                 <span class="normal-scroll-hint">Scroll to step through</span>
                 <span class="slide-scroll-hint hidden">Use Left/Right arrows</span>
                 <span class="animate-pulse">→</span>

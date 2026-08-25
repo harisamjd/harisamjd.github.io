@@ -16,7 +16,7 @@
   --color-bg: oklch(0.1995 0.0198 262.0232);
   --color-text-primary: oklch(0.9801 0.0096 252.8096);
   --color-text-secondary: oklch(0.7005 0.0204 248.1197);
-  --color-text-muted: oklch(0.55 0.02 245);
+  --color-text-muted: oklch(0.62 0.02 245);
   --color-divider: oklch(0.2750 0 0);
   
   /* Card Background - Slightly lighter dark navy card */

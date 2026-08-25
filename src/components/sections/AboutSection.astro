@@ -17,7 +17,7 @@ import profilePhoto from '../../assets/picts/FAZZA-3410.jpg';
         About Me
       </span>
       <h2 id="about-heading" class="text-heading-xl text-text-primary font-bold tracking-tight">
-        Engineering Processes, Empowering Data, Digitalizing Solutions
+        Bridging Engineering, Data & Digital
       </h2>
     </div>
 
@@ -37,13 +37,15 @@ import profilePhoto from '../../assets/picts/FAZZA-3410.jpg';
                 width={600}
                 height={800}
                 quality={85}
+                loading="lazy"
+                decoding="async"
               />
               <div class="absolute inset-0 bg-gradient-to-t from-bg/40 to-transparent opacity-60 pointer-events-none"></div>
             </div>
           </div>
 
           <!-- Story Bio Column (span 5 of 8) -->
-          <div class="sm:col-span-5 flex flex-col gap-6 text-body text-text-secondary leading-relaxed text-justify">
+          <div class="sm:col-span-5 flex flex-col gap-6 text-body text-text-secondary leading-relaxed text-left">
             {personalInfo.summary.map((paragraph) => (
               <p>{paragraph}</p>
             ))}

@@ -11,19 +11,19 @@ import heroBgImage from '../../assets/picts/FAZZA-3339.jpg';
   class="relative min-h-[calc(100vh-72px)] flex flex-col justify-center items-center px-6 overflow-hidden"
   aria-label="Welcome and Introduction"
 >
-  <!-- Hardware-accelerated background image -->
+  <!-- Hardware-accelerated background image with asynchronous decoding and GPU layer promotion -->
   <Image
     src={heroBgImage}
     alt="Hero Background"
-    class="absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none z-0"
+    class="absolute inset-0 w-full h-full object-cover object-center pointer-events-none select-none z-0 will-change-transform"
     width={1920}
-    quality={80}
+    quality={70}
     loading="eager"
+    decoding="async"
   />
 
-  <!-- Dark vignette overlays to ensure perfect contrast and text readability -->
-  <div class="absolute inset-0 bg-bg/85 z-0"></div>
-  <div class="absolute inset-0 bg-gradient-to-b from-bg/90 via-transparent to-bg z-0"></div>
+  <!-- Single optimized vignette overlay to ensure perfect contrast and text readability with minimal layout/compositing cost -->
+  <div class="absolute inset-0 bg-gradient-to-b from-bg/98 via-bg/85 to-bg z-0"></div>
 
   <!-- Decorative R&D Process Flowchart Blueprint SVG -->
   <div class="absolute right-10 top-1/2 -translate-y-1/2 w-[540px] h-[540px] hidden lg:block opacity-[0.25] z-0 select-none pointer-events-none">
@@ -113,7 +113,7 @@ import heroBgImage from '../../assets/picts/FAZZA-3339.jpg';
       id="hero-scroll"
       class="mt-8 flex flex-col items-center gap-1.5 opacity-0 transform translate-y-[15px] cursor-pointer group/scroll"
     >
-      <span class="text-[10px] font-mono text-accent font-semibold tracking-widest uppercase group-hover/scroll:text-white transition-colors">
+      <span class="text-caption font-mono text-accent font-semibold tracking-widest uppercase group-hover/scroll:text-white transition-colors">
         Click or Scroll to Follow My Journey
       </span>
       <ArrowDown class="w-4 h-4 text-accent animate-scroll-sweep" />

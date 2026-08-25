@@ -1,4 +1,5 @@
 ---
+import { Factory, Laptop, Rocket } from '@lucide/astro';
 ---
 
 <section
@@ -26,10 +27,12 @@
       <!-- Card 1: Manufacturing Impact -->
       <div class="bg-card-bg border border-divider p-8 rounded-lg flex flex-col gap-6 hover:border-accent/25 hover:shadow-md transition-all duration-300">
         <div class="flex items-center gap-3 border-b border-divider pb-4 shrink-0">
-          <span class="text-2xl select-none">🏭</span>
+          <div class="p-2.5 bg-surface rounded text-accent">
+            <Factory class="w-5 h-5" />
+          </div>
           <div>
             <h3 class="text-body-sm font-bold text-text-primary">Manufacturing Impact</h3>
-            <span class="text-[9px] font-mono text-accent font-semibold tracking-wider uppercase block">Operations & Scale-Up</span>
+            <span class="text-caption font-mono text-accent font-semibold tracking-wider uppercase block">Operations & Scale-Up</span>
           </div>
         </div>
         <ul class="flex flex-col gap-4 flex-grow">
@@ -57,10 +60,12 @@
       <!-- Card 2: Digital Transformation Impact -->
       <div class="bg-card-bg border border-divider p-8 rounded-lg flex flex-col gap-6 hover:border-accent/25 hover:shadow-md transition-all duration-300">
         <div class="flex items-center gap-3 border-b border-divider pb-4 shrink-0">
-          <span class="text-2xl select-none">💻</span>
+          <div class="p-2.5 bg-surface rounded text-accent">
+            <Laptop class="w-5 h-5" />
+          </div>
           <div>
             <h3 class="text-body-sm font-bold text-text-primary">Digital Transformation</h3>
-            <span class="text-[9px] font-mono text-accent font-semibold tracking-wider uppercase block">Systems & Automation</span>
+            <span class="text-caption font-mono text-accent font-semibold tracking-wider uppercase block">Systems & Automation</span>
           </div>
         </div>
         <ul class="flex flex-col gap-4 flex-grow">
@@ -94,10 +99,12 @@
       <!-- Card 3: Personal Innovation -->
       <div class="bg-card-bg border border-divider p-8 rounded-lg flex flex-col gap-6 hover:border-accent/25 hover:shadow-md transition-all duration-300">
         <div class="flex items-center gap-3 border-b border-divider pb-4 shrink-0">
-          <span class="text-2xl select-none">🚀</span>
+          <div class="p-2.5 bg-surface rounded text-accent">
+            <Rocket class="w-5 h-5" />
+          </div>
           <div>
             <h3 class="text-body-sm font-bold text-text-primary">Personal Innovation</h3>
-            <span class="text-[9px] font-mono text-accent font-semibold tracking-wider uppercase block">Independent Projects</span>
+            <span class="text-caption font-mono text-accent font-semibold tracking-wider uppercase block">Independent Projects</span>
           </div>
         </div>
         <ul class="flex flex-col gap-4 flex-grow">
