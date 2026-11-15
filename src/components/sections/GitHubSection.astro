@@ -20,19 +20,61 @@ const levelColorMap: Record<string, string> = {
   FIRST_QUARTILE: 'bg-emerald-950/90 border border-emerald-800/50',
   SECOND_QUARTILE: 'bg-emerald-800/80 border border-emerald-600/50',
   THIRD_QUARTILE: 'bg-emerald-600/90 border border-emerald-500/60',
-  FOURTH_QUARTILE: 'bg-emerald-400 border border-emerald-300/80'
+  FOURTH_QUARTILE: 'bg-emerald-400 border border-emerald-300/80',
+  UPCOMING: 'bg-surface/20 border border-dashed border-text-muted/35 opacity-75'
 };
 
-// Fallback 52x7 empty grid when stats haven't been synced yet
-const weeks: ContributionWeek[] = hasLiveStats
+// Fallback 53x7 empty grid when stats haven't been synced yet
+const rawWeeks: ContributionWeek[] = hasLiveStats
   ? (githubStats.weeks as ContributionWeek[])
-  : Array.from({ length: 52 }, () => ({
+  : Array.from({ length: 53 }, () => ({
       contributionDays: Array.from({ length: 7 }, () => ({
         date: '',
         contributionCount: 0,
         contributionLevel: 'NONE'
       }))
     }));
+
+// Pad the final week to 7 rows with UPCOMING placeholders for days that haven't occurred yet
+const weeks: ContributionWeek[] = rawWeeks.map((week, wIdx) => {
+  if (wIdx === rawWeeks.length - 1 && week.contributionDays.length < 7) {
+    const missing = 7 - week.contributionDays.length;
+    return {
+      contributionDays: [
+        ...week.contributionDays,
+        ...Array.from({ length: missing }, () => ({
+          date: '',
+          contributionCount: 0,
+          contributionLevel: 'UPCOMING'
+        }))
+      ]
+    };
+  }
+  return week;
+});
+
+// Compute month labels aligned to the week column where each new month begins
+const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const monthLabels: string[] = weeks.map(() => '');
+let lastMonth = -1;
+let lastLabelCol = -3;
+
+weeks.forEach((week, colIdx) => {
+  // Check the first valid date in this week (or any day where the 1st of a month appears)
+  const firstOfMonthDay = week.contributionDays.find((d) => d.date && d.date.endsWith('-01'));
+  const refDay = firstOfMonthDay || week.contributionDays.find((d) => Boolean(d.date));
+  if (!refDay?.date) return;
+
+  const monthIdx = Number(refDay.date.split('-')[1]) - 1;
+  if (monthIdx !== lastMonth) {
+    // Avoid overlapping labels if the very first column only has a couple days before next month
+    if (colIdx - lastLabelCol >= 2) {
+      monthLabels[colIdx] = monthNames[monthIdx];
+      lastLabelCol = colIdx;
+    }
+    lastMonth = monthIdx;
+  }
+});
 
 const formattedUpdatedAt = githubStats.updatedAt
   ? new Date(githubStats.updatedAt).toLocaleDateString('en-US', {
@@ -58,7 +100,7 @@ const formattedUpdatedAt = githubStats.updatedAt
         <h2 id="github-heading" class="text-heading-xl text-text-primary font-bold tracking-tight mb-2">
           GitHub Activity
         </h2>
-        <p class="text-body-sm text-text-secondary max-w-[600px]">
+        <p class="text-body-sm text-text-secondary">
           Aggregated contribution metrics across public and private repositories (source code and private repository names remain confidential).
         </p>
       </div>
@@ -86,7 +128,12 @@ const formattedUpdatedAt = githubStats.updatedAt
             <span class="text-caption font-mono uppercase">1Y Contributions</span>
             <GitCommitHorizontal class="w-4 h-4 text-emerald-400" />
           </div>
-          <div class="text-2xl md:text-3xl font-bold font-mono text-text-primary mt-1">
+          <div
+            class="gh-counter text-2xl md:text-3xl font-bold font-mono text-text-primary mt-1"
+            data-target={hasLiveStats ? githubStats.totalContributions : 0}
+            data-suffix=""
+            data-format="locale"
+          >
             {hasLiveStats ? githubStats.totalContributions.toLocaleString() : '—'}
           </div>
           <span class="text-[11px] text-text-secondary font-mono">
@@ -99,7 +146,11 @@ const formattedUpdatedAt = githubStats.updatedAt
             <span class="text-caption font-mono uppercase">Active Days</span>
             <CalendarCheck class="w-4 h-4 text-accent" />
           </div>
-          <div class="text-2xl md:text-3xl font-bold font-mono text-text-primary mt-1">
+          <div
+            class="gh-counter text-2xl md:text-3xl font-bold font-mono text-text-primary mt-1"
+            data-target={hasLiveStats ? githubStats.activeDays : 0}
+            data-suffix=""
+          >
             {hasLiveStats ? `${githubStats.activeDays}` : '—'}
           </div>
           <span class="text-[11px] text-text-secondary font-mono">
@@ -112,7 +163,11 @@ const formattedUpdatedAt = githubStats.updatedAt
             <span class="text-caption font-mono uppercase">Longest Streak</span>
             <Flame class="w-4 h-4 text-amber-400" />
           </div>
-          <div class="text-2xl md:text-3xl font-bold font-mono text-text-primary mt-1">
+          <div
+            class="gh-counter text-2xl md:text-3xl font-bold font-mono text-text-primary mt-1"
+            data-target={hasLiveStats ? githubStats.longestStreak : 0}
+            data-suffix="d"
+          >
             {hasLiveStats ? `${githubStats.longestStreak}d` : '—'}
           </div>
           <span class="text-[11px] text-text-secondary font-mono">
@@ -125,7 +180,11 @@ const formattedUpdatedAt = githubStats.updatedAt
             <span class="text-caption font-mono uppercase">Repositories</span>
             <FolderGit2 class="w-4 h-4 text-sky-400" />
           </div>
-          <div class="text-2xl md:text-3xl font-bold font-mono text-text-primary mt-1">
+          <div
+            class="gh-counter text-2xl md:text-3xl font-bold font-mono text-text-primary mt-1"
+            data-target={hasLiveStats ? totalRepos : 0}
+            data-suffix=""
+          >
             {hasLiveStats ? totalRepos : '—'}
           </div>
           <span class="text-[11px] text-text-secondary font-mono">
@@ -149,37 +208,87 @@ const formattedUpdatedAt = githubStats.updatedAt
         </div>
 
         <div class="overflow-x-auto pb-2">
-          <div class="inline-flex gap-[3px] min-w-max">
-            {weeks.map((week) => (
-              <div class="flex flex-col gap-[3px]">
-                {week.contributionDays.map((day) => {
-                  const colorClass = levelColorMap[day.contributionLevel] || levelColorMap.NONE;
-                  const titleText = day.date
-                    ? `${day.date}: ${day.contributionCount} contribution${day.contributionCount === 1 ? '' : 's'}`
-                    : 'Awaiting sync';
-                  return (
-                    <div
-                      title={titleText}
-                      class={`w-[11px] h-[11px] sm:w-[13px] sm:h-[13px] rounded-[2px] ${colorClass} transition-transform hover:scale-125`}
-                    />
-                  );
-                })}
+          <div class="min-w-[700px] w-full flex flex-col gap-1.5">
+            <!-- Row 1: Spacer + Month Index Row -->
+            <div class="flex items-center gap-2">
+              <div class="w-7 shrink-0"></div>
+              <div
+                class="flex-1 grid gap-[3px]"
+                style={`grid-template-columns: repeat(${weeks.length}, minmax(0, 1fr));`}
+              >
+                {monthLabels.map((label) => (
+                  <span class="text-[10px] font-mono text-text-muted leading-none whitespace-nowrap overflow-visible select-none">
+                    {label}
+                  </span>
+                ))}
               </div>
-            ))}
+            </div>
+
+            <!-- Row 2: Complete Day Labels (Sun - Sat) + Pixel Matrix -->
+            <div class="flex items-stretch gap-2">
+              <div class="w-7 shrink-0 grid grid-rows-7 gap-[3px] text-[10px] font-mono text-text-muted select-none">
+                <span class="leading-none flex items-center">Sun</span>
+                <span class="leading-none flex items-center">Mon</span>
+                <span class="leading-none flex items-center">Tue</span>
+                <span class="leading-none flex items-center">Wed</span>
+                <span class="leading-none flex items-center">Thu</span>
+                <span class="leading-none flex items-center">Fri</span>
+                <span class="leading-none flex items-center">Sat</span>
+              </div>
+
+              <div
+                class="flex-1 grid gap-[3px]"
+                style={`grid-template-columns: repeat(${weeks.length}, minmax(0, 1fr));`}
+              >
+                {weeks.map((week) => (
+                  <div class="grid grid-rows-7 gap-[3px]">
+                    {week.contributionDays.map((day) => {
+                      const isUpcoming = day.contributionLevel === 'UPCOMING';
+                      const isActive = !isUpcoming && day.contributionLevel !== 'NONE' && day.contributionCount > 0;
+                      const activeColorClass = levelColorMap[day.contributionLevel] || levelColorMap.NONE;
+                      const baseClass = isUpcoming ? levelColorMap.UPCOMING : levelColorMap.NONE;
+                      const titleText = isUpcoming
+                        ? 'Upcoming day (current week)'
+                        : day.date
+                          ? `${day.date}: ${day.contributionCount} contribution${day.contributionCount === 1 ? '' : 's'}`
+                          : 'Awaiting sync';
+                      return (
+                        <div
+                          title={titleText}
+                          class={`relative w-full aspect-square rounded-[2px] ${baseClass} transition-transform ${isUpcoming ? '' : 'hover:scale-125'}`}
+                        >
+                          {isActive && (
+                            <span
+                              class={`gh-active-dot absolute inset-0 rounded-[2px] ${activeColorClass}`}
+                            />
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Legend -->
-        <div class="flex items-center justify-between text-[11px] font-mono text-text-muted pt-1">
+        <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-text-muted pt-1">
           <span>Past 12 months</span>
-          <div class="flex items-center gap-1.5">
-            <span>Less</span>
-            <span class="w-2.5 h-2.5 rounded-[2px] bg-surface/80 border border-divider/60"></span>
-            <span class="w-2.5 h-2.5 rounded-[2px] bg-emerald-950/90 border border-emerald-800/50"></span>
-            <span class="w-2.5 h-2.5 rounded-[2px] bg-emerald-800/80 border border-emerald-600/50"></span>
-            <span class="w-2.5 h-2.5 rounded-[2px] bg-emerald-600/90 border border-emerald-500/60"></span>
-            <span class="w-2.5 h-2.5 rounded-[2px] bg-emerald-400 border border-emerald-300/80"></span>
-            <span>More</span>
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-[2px] bg-surface/20 border border-dashed border-text-muted/35 opacity-75"></span>
+              <span>Upcoming</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span>Less</span>
+              <span class="w-2.5 h-2.5 rounded-[2px] bg-surface/80 border border-divider/60"></span>
+              <span class="w-2.5 h-2.5 rounded-[2px] bg-emerald-950/90 border border-emerald-800/50"></span>
+              <span class="w-2.5 h-2.5 rounded-[2px] bg-emerald-800/80 border border-emerald-600/50"></span>
+              <span class="w-2.5 h-2.5 rounded-[2px] bg-emerald-600/90 border border-emerald-500/60"></span>
+              <span class="w-2.5 h-2.5 rounded-[2px] bg-emerald-400 border border-emerald-300/80"></span>
+              <span>More</span>
+            </div>
           </div>
         </div>
       </div>
@@ -197,20 +306,93 @@ const formattedUpdatedAt = githubStats.updatedAt
     const section = document.getElementById('github-activity');
     if (!section) return;
 
+    const counters = Array.from(section.querySelectorAll<HTMLElement>('.gh-counter'));
+    const activeDots = Array.from(section.querySelectorAll<HTMLElement>('.gh-active-dot'));
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const resetSection = () => {
+      gsap.killTweensOf(section);
+      gsap.killTweensOf(activeDots);
+      gsap.set(section, { opacity: 0, y: 40 });
+      gsap.set(activeDots, { opacity: 0, scale: 0.2 });
+      counters.forEach((el) => {
+        if (!Number(el.dataset.target || '0')) return;
+        const suffix = el.dataset.suffix || '';
+        el.textContent = `0${suffix}`;
+      });
+    };
+
+    const playSection = () => {
+      gsap.killTweensOf(section);
+      gsap.killTweensOf(activeDots);
+
+      gsap.fromTo(
+        section,
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }
+      );
+
+      // 1. Count-up numbers with 350ms delay
+      counters.forEach((el, idx) => {
+        const target = Number(el.dataset.target || '0');
+        if (!target) return;
+        const suffix = el.dataset.suffix || '';
+        const useLocale = el.dataset.format === 'locale';
+        const state = { val: 0 };
+
+        el.textContent = `0${suffix}`;
+        gsap.to(state, {
+          val: target,
+          duration: 1.1,
+          delay: 0.35 + idx * 0.06,
+          ease: 'power2.out',
+          onUpdate: () => {
+            const num = Math.round(state.val);
+            el.textContent = `${useLocale ? num.toLocaleString() : num}${suffix}`;
+          },
+          onComplete: () => {
+            el.textContent = `${useLocale ? target.toLocaleString() : target}${suffix}`;
+          }
+        });
+      });
+
+      // 2. Green active dots appear 1-by-1 across the static board
+      if (activeDots.length > 0) {
+        gsap.fromTo(
+          activeDots,
+          { opacity: 0, scale: 0.2 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 0.25,
+            delay: 0.35,
+            stagger: 0.014,
+            ease: 'back.out(1.8)'
+          }
+        );
+      }
+    };
 
     if (prefersReducedMotion) {
       gsap.set(section, { opacity: 1, y: 0 });
+      gsap.set(activeDots, { opacity: 1, scale: 1 });
     } else {
-      gsap.to(section, {
-        opacity: 1,
-        y: 0,
-        duration: 0.8,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: section,
-          start: 'top 80%',
-          toggleActions: 'play none none none',
+      ScrollTrigger.create({
+        trigger: section,
+        start: 'top 80%',
+        end: 'bottom 15%',
+        onEnter: playSection,
+        onEnterBack: playSection,
+        onLeave: resetSection,
+        onLeaveBack: resetSection
+      });
+
+      window.addEventListener('presentation-slide-change', (e: Event) => {
+        const customEvent = e as CustomEvent<{ sectionId: string }>;
+        if (customEvent.detail?.sectionId === 'github-activity') {
+          playSection();
+        } else {
+          resetSection();
         }
       });
     }
