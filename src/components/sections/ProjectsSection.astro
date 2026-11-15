@@ -496,6 +496,22 @@ const projectsJSON = JSON.stringify(projects);
                 ${project.solution}
               </p>
             </div>
+
+            ${project.features && project.features.length > 0 ? `
+              <div>
+                <h4 class="text-body-sm font-bold text-text-primary uppercase tracking-wider mb-2">
+                  Key Features
+                </h4>
+                <ul class="flex flex-col gap-2">
+                  ${project.features.map((feat: string) => `
+                    <li class="flex items-start gap-2.5 text-body-sm text-text-secondary leading-relaxed">
+                      <span class="text-accent shrink-0 mt-0.5">•</span>
+                      <span>${feat}</span>
+                    </li>
+                  `).join('')}
+                </ul>
+              </div>
+            ` : ''}
           </div>
 
           <div class="md:col-span-5 flex flex-col gap-6 bg-surface/50 border border-divider p-6 rounded-md">

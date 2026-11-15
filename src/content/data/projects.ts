@@ -6,6 +6,7 @@ export interface Project {
   problem: string;
   challenge?: string; // Optional field if not provided in docs
   solution: string;
+  features?: string[];
   impacts: string[];
   techStack: string[];
   softSkills?: string[];
@@ -143,32 +144,41 @@ export const projects: Project[] = [
     ]
   },
   {
-    id: "gedanggoreng",
-    title: "GedangGoreng: Stock Analysis & Screener Platform",
+    id: "artoturah",
+    title: "Artoturah Traders Hub: Stock Analysis, Screener & Alert Tracer Platform",
     category: "Financial Data & Analytics",
     role: ["Full Stack Developer", "Financial Analyst"],
-    problem: "Stock investors struggle to manually backtest target price predictions, filter broker transactional patterns (bandarmologi) across multiple timeframes, and synthesize macro global sentiment before the market opens.",
-    challenge: "Integrating fragmented broker data summary feeds, managing high-volume API requests within rate limits, and processing real-time market sentiment securely.",
-    solution: "Developed a custom Web App with Next.js framework. Integrated with Supabase platform featuring a custom multi-criteria screener (Breakout, Multibagger, Insider, and Shark/Broker Inventory), dynamic bulk data monitoring, and an automated Morning Briefing system compiling global indices, commodities, and Forex IDR impact metrics with real-time market data integrated from Stockbit.",
-    impacts: [
-      "Transformed a 2-hour manual market screening routine into a 5-second automated bulk process.",
-      "Enabled dynamic hit-rate analytics (R1, Max, and Total Hit Rates) to backtest prediction accuracy.",
-      "Automated classification of top-3 broker market behaviors (Whale, Smart Money, Retail, Mix) across various trading day intervals (3, 5, 10, 20, 50 days).",
-      "Synthesized real-time global financial data into a unified Morning Briefing pre-market dashboard."
+    problem: "Indonesian stock (IDX) traders struggle to synthesize pre-market macro sentiment, calculate realistic price targets from broker accumulation/distribution (bandarmologi), screen multi-model setups across trading sessions, and objectively backtest Telegram alert accuracy.",
+    challenge: "Integrating real-time market streams, broker summary feeds, and live Telegram DSI alerts within API rate limits while securing user access and computing multi-timeframe hit-rate analytics accurately.",
+    solution: "Built Artoturah Traders Hub using Next.js and Supabase as an all-in-one Indonesian stock (IDX) analytics, screening, and alert-tracking workspace.",
+    features: [
+      "Login (2FA Security): Protected user access with 6-digit Google Authenticator (TOTP) verification.",
+      "Morning Briefing: Pre-market macro pulse covering Global Indices, Commodities & Sector Impact, USD/IDR FX, Top Market Movers (Stream API), and IDX Sector Rotation (Relative Rotation Graph vs IHSG).",
+      "Stock Calculator: Realistic & Max price target calculation, Broker Summary (Smartmoney/Whale/Retail/Mix), Key Stats, TradingView/Chartbit technicals (RSI, MFI, Stochastic), Broker Flow Heatmap & Consistency, and Narrative Analysis.",
+      "Manual Screener: Multi-model real-time screener across Intraday, BSJP, and After Market sessions (Breakout, Multibagger, Insider, Daily Movers, Daily Top Stocks) with Ideal Zone, Risk Level, and TP1/TP2 probabilities.",
+      "Monitor-Alert (Alert DSI): Real-time Telegram/Bot alert feed with IHSG 1D/30D live charts, inline sparklines, RSI/MFI, and 1D/30D Accumulation/Distribution targets.",
+      "Tracer DSI: Automated accuracy tracking across Target Dinamis, Target Realistis, Target Max, and Stop Loss with Hit Rate, Avg Gain/Loss, Avg Duration, and per-ticker alert history.",
+      "Watchlist (ATM Harian): Custom daily watchlist with Net/Gross & Clean/All views, OHLC comparison, and multi-timeframe Top Broker Accumulation (31D, 1D) & Distribution (1D).",
+      "Trading Ideas: Historical Alert DSI win-rate matrix segmented by IHSG market conditions (IHSG Hijau, Merah, Flat) synced with dynamic target monitoring."
     ],
-    techStack: ["Next.js", "TypeScript", "Supabase", "Tailwind CSS", "Google Gemini AI", "TradingView API"],
+    impacts: [
+      "Consolidated pre-market macro sentiment, sector rotation, and top movers into a single Morning Briefing workflow.",
+      "Automated broker accumulation/distribution (bandarmologi) price target calculations and multi-timeframe broker flow heatmaps.",
+      "Enabled objective backtesting of Telegram DSI alerts across market conditions (IHSG Green, Red, and Flat) with dynamic hit-rate metrics.",
+      "Streamlined session-based stock screening (Intraday, BSJP, After Market) and daily watchlist tracking."
+    ],
+    techStack: ["Next.js", "TypeScript", "Supabase", "Tailwind CSS", "Google Gemini AI", "TradingView API", "Telegram Bot API"],
     softSkills: ["Data Analytics", "Data Visualization", "Capital Market Analysis", "Quantitative Analysis"],
-    demoUrl: "https://ihsg-stock-deck.vercel.app",
+    demoUrl: "https://artoturah.vercel.app",
     images: [
-      "/images/projects/gedanggoreng/1.png",
-      "/images/projects/gedanggoreng/2.png",
-      "/images/projects/gedanggoreng/3.png",
-      "/images/projects/gedanggoreng/4.png",
-      "/images/projects/gedanggoreng/5.png",
-      "/images/projects/gedanggoreng/6.png",
-      "/images/projects/gedanggoreng/7.png",
-      "/images/projects/gedanggoreng/8.png",
-      "/images/projects/gedanggoreng/9.png"
+      "/images/projects/artoturah/1-login.png",
+      "/images/projects/artoturah/2-morning-briefing.png",
+      "/images/projects/artoturah/3-stock-calculator.png",
+      "/images/projects/artoturah/4-manual-screener.png",
+      "/images/projects/artoturah/5-monitor-alert.png",
+      "/images/projects/artoturah/6-tracer-dsi.png",
+      "/images/projects/artoturah/7-watchlist.png",
+      "/images/projects/artoturah/8-trading-ideas.png"
     ]
   },
   {
