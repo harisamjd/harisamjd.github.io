@@ -1,0 +1,210 @@
+---
+import { TrendingDown, TrendingUp, BarChart3, Layers, Cpu, Presentation, Database, LineChart } from '@lucide/astro';
+
+const kpis = [
+  {
+    value: "-25%",
+    prefix: "-",
+    target: 25,
+    suffix: "%",
+    label: "Product Return Rate",
+    detail: "Reduced via structured root-cause analysis & corrective actions",
+    tag: "Operations Analytics",
+    icon: TrendingDown,
+    accent: "text-emerald-400"
+  },
+  {
+    value: "-15%",
+    prefix: "-",
+    target: 15,
+    suffix: "%",
+    label: "Production Waste",
+    detail: "Minimized through operational data analysis & process optimization",
+    tag: "Lean & Six Sigma",
+    icon: TrendingDown,
+    accent: "text-emerald-400"
+  },
+  {
+    value: "+25%",
+    prefix: "+",
+    target: 25,
+    suffix: "%",
+    label: "Process Readiness",
+    detail: "Improved by evaluating manufacturing trials & tracking CAPA",
+    tag: "R&D Scale-Up",
+    icon: TrendingUp,
+    accent: "text-accent"
+  },
+  {
+    value: "3",
+    prefix: "",
+    target: 3,
+    suffix: "",
+    label: "COGM Financial Models",
+    detail: "Built for new product cost evaluation & management planning",
+    tag: "Financial Modeling",
+    icon: LineChart,
+    accent: "text-accent"
+  },
+  {
+    value: "2",
+    prefix: "",
+    target: 2,
+    suffix: "",
+    label: "Cost Centers Centralized",
+    detail: "OPEX & budget-utilization monitoring via Power BI dashboard",
+    tag: "Business Intelligence",
+    icon: BarChart3,
+    accent: "text-accent"
+  },
+  {
+    value: "4",
+    prefix: "",
+    target: 4,
+    suffix: "",
+    label: "Enterprise & BI Systems",
+    detail: "Sample Request, Approval Workflow, OPEX Dashboard & Trial Mgmt",
+    tag: "Corporate Delivery",
+    icon: Layers,
+    accent: "text-sky-400"
+  },
+  {
+    value: "4",
+    prefix: "",
+    target: 4,
+    suffix: "",
+    label: "Independent & Analytics Apps",
+    detail: "Artoturah Stock Hub, POS BI, Household Cashflow & Network Infra",
+    tag: "Portfolio Builds",
+    icon: Database,
+    accent: "text-sky-400"
+  },
+  {
+    value: "1",
+    prefix: "",
+    target: 1,
+    suffix: "",
+    label: "Full-Day AI Seminar",
+    detail: "\"AI for Work\" training & vibe coding automation for MT employees",
+    tag: "Knowledge Sharing",
+    icon: Presentation,
+    accent: "text-amber-400"
+  }
+];
+---
+
+<section
+  id="kpi-overview"
+  class="py-16 bg-surface/40 border-y border-divider px-6 transition-opacity opacity-0 transform translate-y-[30px]"
+  aria-labelledby="kpi-heading"
+>
+  <div class="max-w-[1100px] mx-auto">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+      <div>
+        <span class="text-caption font-mono text-accent tracking-widest uppercase font-semibold block mb-1.5">
+          Executive KPI Snapshot
+        </span>
+        <h2 id="kpi-heading" class="text-heading-lg text-text-primary font-bold tracking-tight">
+          Measurable Outcomes & Portfolio Metrics
+        </h2>
+      </div>
+      <p class="text-body-sm text-text-secondary max-w-[420px]">
+        Verified performance metrics across 4+ years in FMCG operations, BI reporting, digital delivery, and independent builds.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {kpis.map((kpi) => {
+        const IconComponent = kpi.icon;
+        return (
+          <div class="bg-card-bg border border-divider rounded-lg p-5 flex flex-col justify-between gap-3 hover:border-accent/40 hover:shadow-md transition-all duration-300">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[11px] font-mono uppercase tracking-wider text-text-muted px-2 py-0.5 rounded bg-surface border border-divider">
+                {kpi.tag}
+              </span>
+              <IconComponent class={`w-4 h-4 ${kpi.accent} shrink-0`} />
+            </div>
+
+            <div>
+              <div
+                class={`kpi-counter text-display-sm md:text-3xl font-bold font-mono tracking-tight ${kpi.accent}`}
+                data-prefix={kpi.prefix}
+                data-target={kpi.target}
+                data-suffix={kpi.suffix}
+              >
+                {kpi.value}
+              </div>
+              <h3 class="text-body-sm font-bold text-text-primary mt-1">
+                {kpi.label}
+              </h3>
+              <p class="text-caption text-text-secondary leading-relaxed mt-1">
+                {kpi.detail}
+              </p>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const section = document.getElementById('kpi-overview');
+    if (!section) return;
+
+    const counters = Array.from(section.querySelectorAll<HTMLElement>('.kpi-counter'));
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const runCounters = () => {
+      counters.forEach((el, idx) => {
+        const prefix = el.dataset.prefix || '';
+        const target = Number(el.dataset.target || '0');
+        const suffix = el.dataset.suffix || '';
+        const state = { val: 0 };
+
+        el.textContent = `${prefix}0${suffix}`;
+        gsap.to(state, {
+          val: target,
+          duration: 1.2,
+          delay: 0.35 + idx * 0.06,
+          ease: 'power2.out',
+          onUpdate: () => {
+            el.textContent = `${prefix}${Math.round(state.val)}${suffix}`;
+          },
+          onComplete: () => {
+            el.textContent = `${prefix}${target}${suffix}`;
+          }
+        });
+      });
+    };
+
+    if (prefersReducedMotion) {
+      gsap.set(section, { opacity: 1, y: 0 });
+    } else {
+      let hasCounted = false;
+      gsap.to(section, {
+        opacity: 1,
+        y: 0,
+        duration: 0.7,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+          onEnter: () => {
+            if (!hasCounted) {
+              hasCounted = true;
+              runCounters();
+            }
+          }
+        }
+      });
+    }
+  });
+</script>

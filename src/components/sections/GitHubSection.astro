@@ -1,0 +1,218 @@
+---
+import { GitCommitHorizontal, Flame, CalendarCheck, FolderGit2, Lock, ArrowUpRight } from '@lucide/astro';
+import githubStats from '../../content/data/github-stats.json';
+
+interface ContributionDay {
+  date: string;
+  contributionCount: number;
+  contributionLevel: string;
+}
+
+interface ContributionWeek {
+  contributionDays: ContributionDay[];
+}
+
+const hasLiveStats = Boolean(githubStats.updatedAt) && githubStats.weeks.length > 0;
+const totalRepos = githubStats.publicRepos + githubStats.privateRepos;
+
+const levelColorMap: Record<string, string> = {
+  NONE: 'bg-surface/80 border border-divider/60',
+  FIRST_QUARTILE: 'bg-emerald-950/90 border border-emerald-800/50',
+  SECOND_QUARTILE: 'bg-emerald-800/80 border border-emerald-600/50',
+  THIRD_QUARTILE: 'bg-emerald-600/90 border border-emerald-500/60',
+  FOURTH_QUARTILE: 'bg-emerald-400 border border-emerald-300/80'
+};
+
+// Fallback 52x7 empty grid when stats haven't been synced yet
+const weeks: ContributionWeek[] = hasLiveStats
+  ? (githubStats.weeks as ContributionWeek[])
+  : Array.from({ length: 52 }, () => ({
+      contributionDays: Array.from({ length: 7 }, () => ({
+        date: '',
+        contributionCount: 0,
+        contributionLevel: 'NONE'
+      }))
+    }));
+
+const formattedUpdatedAt = githubStats.updatedAt
+  ? new Date(githubStats.updatedAt).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    })
+  : null;
+---
+
+<section
+  id="github-activity"
+  class="py-[100px] bg-bg px-6 transition-opacity opacity-0 transform translate-y-[40px]"
+  aria-labelledby="github-heading"
+>
+  <div class="max-w-[1100px] mx-auto">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+      <div>
+        <span class="text-caption text-text-muted tracking-widest uppercase font-semibold block mb-2">
+          Engineering Consistency
+        </span>
+        <h2 id="github-heading" class="text-heading-xl text-text-primary font-bold tracking-tight mb-2">
+          GitHub Activity
+        </h2>
+        <p class="text-body-sm text-text-secondary max-w-[600px]">
+          Aggregated contribution metrics across public and private repositories (source code and private repository names remain confidential).
+        </p>
+      </div>
+
+      <a
+        href={githubStats.profileUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 text-body-sm font-semibold px-4 py-2.5 rounded-md bg-card-bg border border-divider text-text-primary hover:border-accent hover:text-accent transition-colors w-fit shrink-0"
+      >
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+        </svg>
+        <span>@{githubStats.username}</span>
+        <ArrowUpRight class="w-4 h-4" />
+      </a>
+    </div>
+
+    <!-- Stats Card Container -->
+    <div class="bg-card-bg border border-divider rounded-xl p-6 md:p-8 flex flex-col gap-6">
+      <!-- Top Metrics Grid -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-surface/60 border border-divider rounded-lg p-4 flex flex-col gap-1">
+          <div class="flex items-center justify-between text-text-muted">
+            <span class="text-caption font-mono uppercase">1Y Contributions</span>
+            <GitCommitHorizontal class="w-4 h-4 text-emerald-400" />
+          </div>
+          <div class="text-2xl md:text-3xl font-bold font-mono text-text-primary mt-1">
+            {hasLiveStats ? githubStats.totalContributions.toLocaleString() : '—'}
+          </div>
+          <span class="text-[11px] text-text-secondary font-mono">
+            {hasLiveStats ? `${githubStats.privateContributions} private • ${githubStats.publicContributions} public` : 'Syncs via GitHub Action'}
+          </span>
+        </div>
+
+        <div class="bg-surface/60 border border-divider rounded-lg p-4 flex flex-col gap-1">
+          <div class="flex items-center justify-between text-text-muted">
+            <span class="text-caption font-mono uppercase">Active Days</span>
+            <CalendarCheck class="w-4 h-4 text-accent" />
+          </div>
+          <div class="text-2xl md:text-3xl font-bold font-mono text-text-primary mt-1">
+            {hasLiveStats ? `${githubStats.activeDays}` : '—'}
+          </div>
+          <span class="text-[11px] text-text-secondary font-mono">
+            out of 365 days
+          </span>
+        </div>
+
+        <div class="bg-surface/60 border border-divider rounded-lg p-4 flex flex-col gap-1">
+          <div class="flex items-center justify-between text-text-muted">
+            <span class="text-caption font-mono uppercase">Longest Streak</span>
+            <Flame class="w-4 h-4 text-amber-400" />
+          </div>
+          <div class="text-2xl md:text-3xl font-bold font-mono text-text-primary mt-1">
+            {hasLiveStats ? `${githubStats.longestStreak}d` : '—'}
+          </div>
+          <span class="text-[11px] text-text-secondary font-mono">
+            {hasLiveStats ? `Current streak: ${githubStats.currentStreak}d` : 'Consecutive active days'}
+          </span>
+        </div>
+
+        <div class="bg-surface/60 border border-divider rounded-lg p-4 flex flex-col gap-1">
+          <div class="flex items-center justify-between text-text-muted">
+            <span class="text-caption font-mono uppercase">Repositories</span>
+            <FolderGit2 class="w-4 h-4 text-sky-400" />
+          </div>
+          <div class="text-2xl md:text-3xl font-bold font-mono text-text-primary mt-1">
+            {hasLiveStats ? totalRepos : '—'}
+          </div>
+          <span class="text-[11px] text-text-secondary font-mono">
+            {hasLiveStats ? `${githubStats.publicRepos} public • ${githubStats.privateRepos} private` : 'Public & private repos'}
+          </span>
+        </div>
+      </div>
+
+      <!-- Contribution Heatmap -->
+      <div class="flex flex-col gap-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <span class="inline-flex items-center gap-1.5 text-caption font-mono text-text-secondary">
+            <Lock class="w-3.5 h-3.5 text-emerald-400" />
+            Private contributions included in activity graph
+          </span>
+          {formattedUpdatedAt && (
+            <span class="text-[11px] font-mono text-text-muted">
+              Last synced: {formattedUpdatedAt}
+            </span>
+          )}
+        </div>
+
+        <div class="overflow-x-auto pb-2">
+          <div class="inline-flex gap-[3px] min-w-max">
+            {weeks.map((week) => (
+              <div class="flex flex-col gap-[3px]">
+                {week.contributionDays.map((day) => {
+                  const colorClass = levelColorMap[day.contributionLevel] || levelColorMap.NONE;
+                  const titleText = day.date
+                    ? `${day.date}: ${day.contributionCount} contribution${day.contributionCount === 1 ? '' : 's'}`
+                    : 'Awaiting sync';
+                  return (
+                    <div
+                      title={titleText}
+                      class={`w-[11px] h-[11px] sm:w-[13px] sm:h-[13px] rounded-[2px] ${colorClass} transition-transform hover:scale-125`}
+                    />
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="flex items-center justify-between text-[11px] font-mono text-text-muted pt-1">
+          <span>Past 12 months</span>
+          <div class="flex items-center gap-1.5">
+            <span>Less</span>
+            <span class="w-2.5 h-2.5 rounded-[2px] bg-surface/80 border border-divider/60"></span>
+            <span class="w-2.5 h-2.5 rounded-[2px] bg-emerald-950/90 border border-emerald-800/50"></span>
+            <span class="w-2.5 h-2.5 rounded-[2px] bg-emerald-800/80 border border-emerald-600/50"></span>
+            <span class="w-2.5 h-2.5 rounded-[2px] bg-emerald-600/90 border border-emerald-500/60"></span>
+            <span class="w-2.5 h-2.5 rounded-[2px] bg-emerald-400 border border-emerald-300/80"></span>
+            <span>More</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const section = document.getElementById('github-activity');
+    if (!section) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      gsap.set(section, { opacity: 1, y: 0 });
+    } else {
+      gsap.to(section, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 80%',
+          toggleActions: 'play none none none',
+        }
+      });
+    }
+  });
+</script>

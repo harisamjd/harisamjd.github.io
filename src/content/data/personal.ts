@@ -15,6 +15,7 @@ export interface TimelineItem {
 export const personalInfo = {
   fullName: "Haris Abdul Majid",
   titles: [
+    "Data & BI Analyst",
     "Business Analyst",
     "Digital Transformation Specialist",
     "R&D Process Development Engineer"

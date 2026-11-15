@@ -1,0 +1,255 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import { Presentation, Users, Clock, Sparkles, Terminal, Workflow, Image as ImageIcon, ChevronLeft, ChevronRight } from '@lucide/astro';
+
+const imageDir = path.join(process.cwd(), 'public/images/speaking/ai-for-work');
+let seminarImages: string[] = [];
+
+try {
+  if (fs.existsSync(imageDir)) {
+    seminarImages = fs
+      .readdirSync(imageDir)
+      .filter((file) => /\.(png|jpe?g|webp|avif)$/i.test(file))
+      .sort()
+      .map((file) => `/images/speaking/ai-for-work/${encodeURIComponent(file)}`);
+  }
+} catch {
+  seminarImages = [];
+}
+
+const modules = [
+  {
+    icon: Sparkles,
+    title: "AI Fundamentals & Prompting",
+    desc: "Introduced core AI concepts from scratch and structured prompting techniques for daily analysis and reporting."
+  },
+  {
+    icon: Workflow,
+    title: "Practical Work Automation",
+    desc: "Demonstrated how to turn repetitive operational tasks into streamlined, AI-assisted workflows."
+  },
+  {
+    icon: Terminal,
+    title: "Mini Vibe Coding Lab",
+    desc: "Guided Management Trainees through hands-on mini vibe coding to build simple automation tools for their own work."
+  }
+];
+---
+
+<section
+  id="speaking"
+  class="py-[120px] bg-surface/30 border-y border-divider px-6 transition-opacity opacity-0 transform translate-y-[40px]"
+  aria-labelledby="speaking-heading"
+>
+  <div class="max-w-[1100px] mx-auto">
+    <div class="mb-12">
+      <span class="text-caption text-text-muted tracking-widest uppercase font-semibold block mb-2">
+        Seminar & Knowledge Sharing
+      </span>
+      <h2 id="speaking-heading" class="text-heading-xl text-text-primary font-bold tracking-tight mb-4">
+        Speaking & Training
+      </h2>
+      <p class="text-body text-text-secondary max-w-[680px]">
+        Sharing practical AI adoption and workflow automation skills to help emerging talents work faster with data and modern tools.
+      </p>
+    </div>
+
+    <div class="bg-card-bg border border-divider rounded-xl p-6 md:p-10 shadow-lg">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- Left: Seminar Details -->
+        <div class="lg:col-span-7 flex flex-col gap-6">
+          <div class="flex flex-wrap items-center gap-2.5">
+            <span class="inline-flex items-center gap-1.5 text-caption font-mono uppercase tracking-wider px-3 py-1 rounded-full bg-accent/10 border border-accent/30 text-accent font-semibold">
+              <Presentation class="w-3.5 h-3.5" />
+              Featured Seminar
+            </span>
+            <span class="inline-flex items-center gap-1.5 text-caption font-mono px-3 py-1 rounded-full bg-surface border border-divider text-text-secondary">
+              <Clock class="w-3.5 h-3.5 text-accent" />
+              Full-Day Session
+            </span>
+            <span class="inline-flex items-center gap-1.5 text-caption font-mono px-3 py-1 rounded-full bg-surface border border-divider text-text-secondary">
+              <Users class="w-3.5 h-3.5 text-accent" />
+              Audience: Management Trainee (MT)
+            </span>
+          </div>
+
+          <div>
+            <h3 class="text-heading-lg text-text-primary font-bold tracking-tight mb-3">
+              AI for Work: From Fundamentals to Vibe Coding Automation
+            </h3>
+            <p class="text-body text-text-secondary leading-relaxed">
+              Delivered a full-day hands-on training session designed for Management Trainee (MT) employees, covering AI fundamentals from the ground up through practical mini vibe coding to automate everyday work tasks.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+            {modules.map((mod) => {
+              const IconComp = mod.icon;
+              return (
+                <div class="bg-surface/60 border border-divider rounded-lg p-4 flex flex-col gap-2">
+                  <div class="p-2 bg-bg border border-divider rounded w-fit text-accent">
+                    <IconComp class="w-4 h-4" />
+                  </div>
+                  <h4 class="text-body-sm font-bold text-text-primary">
+                    {mod.title}
+                  </h4>
+                  <p class="text-caption text-text-secondary leading-relaxed">
+                    {mod.desc}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <!-- Right: Documentation Carousel or Ready-to-Fill Placeholder -->
+        <div class="lg:col-span-5 flex flex-col gap-3">
+          {seminarImages.length > 0 ? (
+            <div id="speaking-gallery" class="flex flex-col gap-3">
+              <div class="relative rounded-lg border border-divider overflow-hidden aspect-video bg-surface/60 group">
+                <img
+                  id="speaking-active-img"
+                  src={seminarImages[0]}
+                  alt="AI for Work Seminar documentation 1"
+                  class="w-full h-full object-cover transition-opacity duration-300"
+                  loading="lazy"
+                />
+
+                {seminarImages.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      id="speaking-prev-btn"
+                      aria-label="Previous seminar photo"
+                      class="absolute left-2.5 top-1/2 -translate-y-1/2 p-2 rounded-full bg-bg/80 border border-divider text-text-primary hover:border-accent hover:text-accent transition-colors cursor-pointer"
+                    >
+                      <ChevronLeft class="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      id="speaking-next-btn"
+                      aria-label="Next seminar photo"
+                      class="absolute right-2.5 top-1/2 -translate-y-1/2 p-2 rounded-full bg-bg/80 border border-divider text-text-primary hover:border-accent hover:text-accent transition-colors cursor-pointer"
+                    >
+                      <ChevronRight class="w-4 h-4" />
+                    </button>
+                    <div
+                      id="speaking-counter"
+                      class="absolute bottom-2.5 right-2.5 px-2.5 py-1 rounded bg-bg/85 backdrop-blur-sm border border-divider text-caption font-mono text-text-primary"
+                    >
+                      1 / {seminarImages.length}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {seminarImages.length > 1 && (
+                <div class="flex gap-2 overflow-x-auto pb-1" id="speaking-thumbs">
+                  {seminarImages.map((imgSrc, idx) => (
+                    <button
+                      type="button"
+                      data-index={idx}
+                      data-src={imgSrc}
+                      aria-label={`View seminar photo ${idx + 1}`}
+                      class={`speaking-thumb shrink-0 w-16 h-10 rounded overflow-hidden border transition-all cursor-pointer ${idx === 0 ? 'border-accent ring-1 ring-accent' : 'border-divider opacity-60 hover:opacity-100'}`}
+                    >
+                      <img
+                        src={imgSrc}
+                        alt={`Thumbnail ${idx + 1}`}
+                        class="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div class="rounded-lg border border-dashed border-divider bg-surface/40 p-8 aspect-video flex flex-col items-center justify-center text-center gap-3">
+              <div class="p-3 rounded-full bg-bg border border-divider text-accent">
+                <ImageIcon class="w-6 h-6" />
+              </div>
+              <div>
+                <p class="text-body-sm font-semibold text-text-primary">
+                  Session Documentation
+                </p>
+                <p class="text-caption text-text-muted mt-1 max-w-[260px]">
+                  Full-Day AI for Work Training • Management Trainee Cohort
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const section = document.getElementById('speaking');
+    if (!section) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      gsap.set(section, { opacity: 1, y: 0 });
+    } else {
+      gsap.to(section, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 80%',
+          toggleActions: 'play none none none',
+        }
+      });
+    }
+
+    // Seminar gallery carousel logic
+    const activeImg = document.getElementById('speaking-active-img') as HTMLImageElement | null;
+    const prevBtn = document.getElementById('speaking-prev-btn');
+    const nextBtn = document.getElementById('speaking-next-btn');
+    const counter = document.getElementById('speaking-counter');
+    const thumbs = Array.from(document.querySelectorAll<HTMLButtonElement>('.speaking-thumb'));
+
+    if (activeImg && thumbs.length > 1) {
+      let currentIdx = 0;
+
+      const updateSlide = (idx: number) => {
+        currentIdx = (idx + thumbs.length) % thumbs.length;
+        const targetThumb = thumbs[currentIdx];
+        const nextSrc = targetThumb?.dataset.src;
+        if (nextSrc) {
+          activeImg.src = nextSrc;
+          activeImg.alt = `AI for Work Seminar documentation ${currentIdx + 1}`;
+        }
+        if (counter) {
+          counter.textContent = `${currentIdx + 1} / ${thumbs.length}`;
+        }
+        thumbs.forEach((t, i) => {
+          if (i === currentIdx) {
+            t.classList.add('border-accent', 'ring-1', 'ring-accent');
+            t.classList.remove('border-divider', 'opacity-60');
+            t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          } else {
+            t.classList.remove('border-accent', 'ring-1', 'ring-accent');
+            t.classList.add('border-divider', 'opacity-60');
+          }
+        });
+      };
+
+      prevBtn?.addEventListener('click', () => updateSlide(currentIdx - 1));
+      nextBtn?.addEventListener('click', () => updateSlide(currentIdx + 1));
+      thumbs.forEach((t, i) => t.addEventListener('click', () => updateSlide(i)));
+    }
+  });
+</script>

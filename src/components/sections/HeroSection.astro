@@ -87,10 +87,22 @@ import heroBgImage from '../../assets/picts/FAZZA-3339.jpg';
     <!-- Intro greeting -->
     <span
       id="hero-greeting"
-      class="text-accent text-body-sm font-semibold tracking-wider uppercase mb-4 opacity-0 transform translate-y-[20px]"
+      class="text-accent text-body-sm font-semibold tracking-wider uppercase mb-3 opacity-0 transform translate-y-[20px]"
     >
       Hi, I'm {personalInfo.fullName}
     </span>
+
+    <!-- Role Titles -->
+    <div
+      id="hero-roles"
+      class="flex flex-wrap items-center justify-center gap-2 mb-5 opacity-0 transform translate-y-[20px]"
+    >
+      {personalInfo.titles.map((role) => (
+        <span class="text-caption font-mono px-3 py-1 rounded-full bg-surface/80 border border-divider text-text-secondary">
+          {role}
+        </span>
+      ))}
+    </div>
 
     <!-- Name / Main Headline with Typewriter Container -->
     <h1
@@ -150,6 +162,7 @@ import heroBgImage from '../../assets/picts/FAZZA-3339.jpg';
 
   window.addEventListener('DOMContentLoaded', () => {
     const greeting = document.getElementById('hero-greeting');
+    const roles = document.getElementById('hero-roles');
     const headline = document.getElementById('hero-headline');
     const subtitle = document.getElementById('hero-subtitle');
     const scrollIndicator = document.getElementById('hero-scroll');
@@ -183,7 +196,7 @@ import heroBgImage from '../../assets/picts/FAZZA-3339.jpg';
       if (prefersReducedMotion) {
         if (typingTarget) typingTarget.textContent = fullText;
         if (typingCursor) typingCursor.remove();
-        gsap.set([greeting, headline, subtitle, scrollIndicator], { opacity: 1, y: 0 });
+        gsap.set([greeting, roles, headline, subtitle, scrollIndicator], { opacity: 1, y: 0 });
         if (blueprintSvg) gsap.set(blueprintSvg, { opacity: 0.25 });
         return;
       }
@@ -191,6 +204,7 @@ import heroBgImage from '../../assets/picts/FAZZA-3339.jpg';
       const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
       tl.to(greeting, { opacity: 1, y: 0, duration: 0.6 })
+        .to(roles, { opacity: 1, y: 0, duration: 0.5 }, '-=0.35')
         .to(headline, { 
           opacity: 1, 
           y: 0, 

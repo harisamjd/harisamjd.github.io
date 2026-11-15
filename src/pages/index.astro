@@ -6,12 +6,15 @@ import { FileDown, X } from '@lucide/astro';
 
 // Section components
 import HeroSection from '../components/sections/HeroSection.astro';
+import KpiSection from '../components/sections/KpiSection.astro';
 import AboutSection from '../components/sections/AboutSection.astro';
 import TimelineSection from '../components/sections/TimelineSection.astro';
 import ExpertiseSection from '../components/sections/ExpertiseSection.astro';
 import ImpactSection from '../components/sections/ImpactSection.astro';
 import ProjectsSection from '../components/sections/ProjectsSection.astro';
 import CertificatesSection from '../components/sections/CertificatesSection.astro';
+import SpeakingSection from '../components/sections/SpeakingSection.astro';
+import GitHubSection from '../components/sections/GitHubSection.astro';
 import DownloadCV from '../components/sections/DownloadCV.astro';
 import ContactSection from '../components/sections/ContactSection.astro';
 ---
@@ -24,6 +27,8 @@ import ContactSection from '../components/sections/ContactSection.astro';
   <div class="pt-[72px]" id="presentation-wrapper">
     <!-- Real Sections (Phase 2 - 5) -->
     <HeroSection />
+
+    <KpiSection />
     
     <AboutSection />
     
@@ -34,6 +39,10 @@ import ContactSection from '../components/sections/ContactSection.astro';
     <ImpactSection />
 
     <CertificatesSection />
+
+    <SpeakingSection />
+
+    <GitHubSection />
 
     <TimelineSection />
 
